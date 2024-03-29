@@ -71,7 +71,7 @@ public class Login extends HttpServlet {
                     "                <a class=\"nav-link\" href=\"\">Stats</a>\n" +
                     "            </li>\n" +
                     "        </ul>\n" +
-                    "        <button type=\"button\" class=\"btn btn-warning\">Logout</button>\n" +
+                    "        <a href=\"/tasks_1-Servlets/logout\" class=\"btn btn-warning\">Logout</a>\n" +
                     "    </div>\n" +
                     "</nav>\n" +
                     "</body>\n" +

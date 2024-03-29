@@ -50,4 +50,8 @@ public class UserService {
     public boolean userIsLoggedIn(String username, String sessionId) {
         return userRepository.userLoginExists(username, sessionId);
     }
+
+    public void logoutUser(String username) {
+        userRepository.deactivateUserLogin(username);
+    }
 }
