@@ -11,7 +11,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void createUser(String email, String username, String plainPassword, String name, String surname) {
+    public void registerUser(String email, String username, String plainPassword, String name, String surname) {
         String hashedPassword = hashPassword(plainPassword);
         userRepository.createUser(email, username, hashedPassword, name, surname);
     }
@@ -32,5 +32,22 @@ public class UserService {
             e.printStackTrace();
         }
         return generatedPassword;
+    }
+
+    public boolean authenticateUser(String username, String plainPassword) {
+        return userRepository.userExists(username, hashPassword(plainPassword));
+    }
+
+    public void loginUser(String username, String sessionId) {
+        boolean loginExists = userRepository.userLoginExists(username, sessionId);
+        if (loginExists) {
+            throw new RuntimeException("Login exists");
+        } else {
+            userRepository.createLogin(username, sessionId);
+        }
+    }
+
+    public boolean userIsLoggedIn(String username, String sessionId) {
+        return userRepository.userLoginExists(username, sessionId);
     }
 }

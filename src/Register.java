@@ -12,8 +12,9 @@ public class Register extends HttpServlet {
         userService = new UserService(new UserRepository());
     }
 
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        userService.createUser(request.getParameter("email"),
+        userService.registerUser(request.getParameter("email"),
                 request.getParameter("username"),
                 request.getParameter("password"),
                 request.getParameter("name"),
