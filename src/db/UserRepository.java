@@ -14,6 +14,7 @@ public class UserRepository {
     final String SQL_SELECT_USER_LOGINS = "SELECT * FROM user_login WHERE username = ? AND session_id = ? AND active = TRUE";
     final String SQL_CREATE_LOGIN = "INSERT INTO user_login (username, session_id) VALUES (?, ?)";
     final String SQL_DEACTIVATE_LOGIN = "UPDATE user_login SET active = FALSE WHERE username = ?";
+    final String SQL_ACTIVATE_USER = "UPDATE \"user\" SET active = TRUE WHERE username = ?";
 
 
     public void createUser(String email, String username, String hashedPassword, String name, String surname) {
@@ -92,6 +93,20 @@ public class UserRepository {
             try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DEACTIVATE_LOGIN)) {
                 preparedStatement.setString(1, username);
                 preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean setUserActive(String username) {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_ACTIVATE_USER)) {
+                preparedStatement.setString(1, username);
+                return preparedStatement.executeUpdate() == 1;
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

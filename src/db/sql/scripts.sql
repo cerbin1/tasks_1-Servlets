@@ -16,3 +16,10 @@ CREATE TABLE IF NOT EXISTS user_login (
 	active BOOL NULL DEFAULT TRUE,
 	CONSTRAINT user_login_pkey PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS user_activation_link (
+	link_id UUID NOT NULL,
+	username VARCHAR(255) NOT NULL,
+	expired BOOL NOT NULL DEFAULT FALSE,
+	CONSTRAINT user_activation_link_pkey PRIMARY KEY (link_id)
+);

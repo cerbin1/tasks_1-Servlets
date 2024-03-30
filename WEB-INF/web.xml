@@ -4,6 +4,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
     http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+    <!-- SERVLET-DEFINITIONS-START -->
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
         <servlet-class>Register</servlet-class>
@@ -16,6 +17,12 @@
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>Logout</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ActivateUserServlet</servlet-name>
+        <servlet-class>ActivateUser</servlet-class>
+    </servlet>
+    <!-- SERVLET-DEFINITIONS-END -->
+    <!-- SERVLET-MAPPINGS-START -->
     <servlet-mapping>
         <servlet-name>RegisterServlet</servlet-name>
         <url-pattern>/register</url-pattern>
@@ -32,9 +39,17 @@
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/logout</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ActivateUserServlet</servlet-name>
+        <url-pattern>/activate</url-pattern>
+    </servlet-mapping>
+    <!-- SERVLET-MAPPINGS-END -->
+
+    <!-- SERVLET-LISTENERS-START -->
     <listener>
         <listener-class>
             conf.MyServletContextListener
         </listener-class>
     </listener>
+    <!-- SERVLET-LISTENERS-END -->
 </web-app>

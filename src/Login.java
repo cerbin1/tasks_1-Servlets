@@ -1,5 +1,7 @@
+import db.UserActivationLinkRepository;
 import db.UserRepository;
 import jakarta.servlet.http.*;
+import service.EmailSendingService;
 import service.UserService;
 
 import java.io.IOException;
@@ -7,11 +9,13 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Optional;
 
+import static conf.ApplicationProperties.APP_BASE_PATH;
+
 public class Login extends HttpServlet {
     private final UserService userService;
 
     public Login() {
-        userService = new UserService(new UserRepository());
+        userService = new UserService(new UserRepository(), new UserActivationLinkRepository(), new EmailSendingService());
     }
 
     @Override
@@ -21,9 +25,13 @@ public class Login extends HttpServlet {
         if (userService.authenticateUser(username, password)) {
             HttpSession session = request.getSession();
             String sessionId = session.getId();
-            userService.loginUser(username, sessionId);
-            session.setAttribute("username", username);
-            response.sendRedirect("/tasks_1-Servlets/loggedIn");
+            if (userService.userIsLoggedIn(username, sessionId)) {
+                response.sendRedirect(APP_BASE_PATH + "/loggedIn");
+            } else {
+                userService.loginUser(username, sessionId);
+                session.setAttribute("username", username);
+                response.sendRedirect(APP_BASE_PATH + "/loggedIn");
+            }
         } else {
             throw new RuntimeException("Login");
         }
@@ -72,7 +80,6 @@ public class Login extends HttpServlet {
                     "                <a class=\"nav-link\" href=\"\">Stats</a>\n" +
                     "            </li>\n" +
                     "        </ul>\n" +
-                    "        <a href=\"/tasks_1-Servlets/logout\" class=\"btn btn-warning\">Logout</a>\n" +
                     "    </div>\n" +
                     "</nav>\n" +
                     "</body>\n" +
