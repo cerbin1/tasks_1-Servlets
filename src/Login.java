@@ -1,5 +1,6 @@
 import db.UserRepository;
 import jakarta.servlet.http.*;
+import service.UserService;
 
 import java.io.IOException;
 import java.io.PrintWriter;

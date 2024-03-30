@@ -1,3 +1,5 @@
+package service;
+
 import db.UserRepository;
 
 import java.nio.charset.StandardCharsets;
