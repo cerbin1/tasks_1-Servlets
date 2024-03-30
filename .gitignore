@@ -23,6 +23,9 @@
 hs_err_pid*
 replay_pid*
 
+# Include jars because of no project build tool in project
+!/WEB-INF/lib/*.jar
+
 .idea
 out
 /sources.txt
