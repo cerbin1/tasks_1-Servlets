@@ -42,7 +42,7 @@ public class Login extends HttpServlet {
         HttpSession session = request.getSession();
         String username = (String) session.getAttribute("username");
         String sessionId = tryGetSessionIdFromCookie(request);
-        if (userService.userIsLoggedIn(username, sessionId)) {
+        if (userService.userIsLoggedIn(username, sessionId) && userService.userIsActive(username)) {
             PrintWriter writer = response.getWriter();
             writer.print("<html lang=\"en\">\n" +
                     "<head>\n" +

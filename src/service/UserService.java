@@ -73,4 +73,8 @@ public class UserService {
         }
         return false;
     }
+
+    public boolean userIsActive(String username) {
+        return userRepository.getByUsername(username);
+    }
 }
