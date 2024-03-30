@@ -75,6 +75,10 @@ public class UserService {
     }
 
     public boolean userIsActive(String username) {
-        return userRepository.getByUsername(username);
+        return userRepository.getActiveUserWith(username);
+    }
+
+    public boolean validateNoUserWithGivenEmailAndUsername(String email, String username) {
+        return !userRepository.existsByEmail(email) && !userRepository.existsByUsername(username);
     }
 }

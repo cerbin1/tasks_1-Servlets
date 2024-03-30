@@ -16,6 +16,8 @@ public class UserRepository {
     final String SQL_DEACTIVATE_LOGIN = "UPDATE user_login SET active = FALSE WHERE username = ?";
     final String SQL_ACTIVATE_USER = "UPDATE \"user\" SET active = TRUE WHERE username = ?";
     final String SQL_IS_USER_ACTIVE = "SELECT * FROM \"user\" WHERE username = ? AND active = TRUE";
+    final String SQL_GET_BY_EMAIL = "SELECT * FROM \"user\" WHERE email = ?";
+    final String SQL_GET_BY_USERNAME = "SELECT * FROM \"user\" WHERE username = ?";
 
 
     public void createUser(String email, String username, String hashedPassword, String name, String surname) {
@@ -116,13 +118,41 @@ public class UserRepository {
         }
     }
 
-    public boolean getByUsername(String username) {
+    public boolean getActiveUserWith(String username) {
         DbConnection dbConnection = new DbConnection();
         try (Connection connection = dbConnection.createConnection()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_IS_USER_ACTIVE)) {
                 preparedStatement.setString(1, username);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 return onlyOneRowIn(resultSet);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean existsByEmail(String email) {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_BY_EMAIL)) {
+                preparedStatement.setString(1, email);
+                return preparedStatement.executeQuery().next();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean existsByUsername(String username) {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_BY_USERNAME)) {
+                preparedStatement.setString(1, username);
+                return preparedStatement.executeQuery().next();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
