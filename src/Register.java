@@ -61,7 +61,7 @@ public class Register extends HttpServlet {
                     "</body>\n" +
                     "</html>");
         } else {
-            response.sendRedirect("error.html");
+            response.sendRedirect("authError.html");
         }
     }
 }

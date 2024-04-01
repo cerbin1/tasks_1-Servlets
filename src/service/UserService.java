@@ -6,6 +6,7 @@ import db.UserRepository;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.UUID;
 
 import static conf.ApplicationProperties.APP_BASE_PATH;
@@ -32,6 +33,10 @@ public class UserService {
         emailSendingService.sendEmail("Task Application - activation link", mailContent, email);
     }
 
+    public List<UserDto> getUsersData() {
+        return userRepository.findAll();
+    }
+
     // note - SHA-512 should be changed with PBKDF2, BCrypt, or SCrypt but for simplicity and no additional lib SHA was used
     private String hashPassword(String plainPassword) {
         String generatedPassword = null;
@@ -50,11 +55,11 @@ public class UserService {
         return generatedPassword;
     }
 
-    public boolean authenticateUser(String username, String plainPassword) {
-        return userRepository.userExists(username, hashPassword(plainPassword));
+    public String getUserIdByUserCredentials(String username, String plainPassword) {
+        return userRepository.getUserIdByUsernameAndPassword(username, hashPassword(plainPassword));
     }
 
-    public void loginUser(String username, String sessionId) {
+    public void createLogin(String username, String sessionId) {
         userRepository.createLogin(username, sessionId);
     }
 

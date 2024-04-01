@@ -21,6 +21,14 @@
         <servlet-name>ActivateUserServlet</servlet-name>
         <servlet-class>ActivateUser</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CreateTaskServlet</servlet-name>
+        <servlet-class>CreateTask</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TasksServlet</servlet-name>
+        <servlet-class>Tasks</servlet-class>
+    </servlet>
     <!-- SERVLET-DEFINITIONS-END -->
     <!-- SERVLET-MAPPINGS-START -->
     <servlet-mapping>
@@ -42,6 +50,14 @@
     <servlet-mapping>
         <servlet-name>ActivateUserServlet</servlet-name>
         <url-pattern>/activate</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateTaskServlet</servlet-name>
+        <url-pattern>/createTask</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TasksServlet</servlet-name>
+        <url-pattern>/tasks</url-pattern>
     </servlet-mapping>
     <!-- SERVLET-MAPPINGS-END -->
 

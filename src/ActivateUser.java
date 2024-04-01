@@ -21,7 +21,7 @@ public class ActivateUser extends HttpServlet {
         if (userService.activateUserByLink(linkId)) {
             response.sendRedirect("login.html");
         } else {
-            response.sendRedirect("error.html");
+            response.sendRedirect("authError.html");
         }
     }
 }
