@@ -13,11 +13,10 @@ public interface UiUtils {
                 "                <a class=\"nav-link\" href=\"\">Main Page</a>\n" +
                 "            </li>\n" +
                 "            <li class=\"nav-item\">\n" +
-                "                <a class=\"nav-link\" href=\"tasks.html\">List tasks</a>\n" +
+                "                <a class=\"nav-link\" href=\"/tasks_1-Servlets/tasks\">List tasks</a>\n" +
                 "            </li>\n" +
                 "            <li class=\"nav-item\">\n" +
                 "                <a class=\"nav-link\" href=\"/tasks_1-Servlets/createTask\">Create task</a>\n" +
-
                 "            </li>\n" +
                 "            <li class=\"nav-item\">\n" +
                 "                <a class=\"nav-link\" href=\"\">My Tasks</a>\n" +
