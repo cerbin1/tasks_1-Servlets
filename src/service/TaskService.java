@@ -24,7 +24,7 @@ public class TaskService {
         return taskDao.findAllByAssigneeUsername(username);
     }
 
-    public EditTaskDto getTask(String taskId) {
+    public EditTaskDto getTaskForEdit(String taskId) {
         return taskDao.findById(Long.parseLong(taskId));
     }
 

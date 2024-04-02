@@ -106,7 +106,7 @@ public class TaskDao {
         }
     }
 
-    public EditTaskDto findById(Long id) {
+    public EditTaskDto findByIdForEdit(Long id) {
         DbConnection dbConnection = new DbConnection();
         try (Connection connection = dbConnection.createConnection()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_TASK_BY_ID)) {
