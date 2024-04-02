@@ -63,14 +63,13 @@ public class CreateTask extends HttpServlet {
                     "        <div class=\"form-group row\">\n" +
                     "            <label for=\"name\" class=\"col-sm-2 col-form-label\">Name</label>\n" +
                     "            <div class=\"col-sm-10\">\n" +
-                    "                <input required type=\"text\" class=\"form-control\" id=\"name\" name=\"name\" onChange={handleChange}/>\n" +
+                    "                <input required type=\"text\" class=\"form-control\" id=\"name\" name=\"name\"/>\n" +
                     "            </div>\n" +
                     "        </div>\n" +
                     "        <div class=\"form-group row\">\n" +
                     "            <label for=\"deadline\" class=\"col-sm-2 col-form-label\">Deadline</label>\n" +
                     "            <div class=\"col-sm-10\">\n" +
-                    "                <input required class=\"form-control\" id=\"deadline\" name=\"deadline\" type=\"datetime-local\" value={task.deadline}\n" +
-                    "                       onChange={handleChange}/>\n" +
+                    "                <input required class=\"form-control\" id=\"deadline\" name=\"deadline\" type=\"datetime-local\"/>" +
                     "            </div>\n" +
                     "        </div>\n" +
                     "\n" +
