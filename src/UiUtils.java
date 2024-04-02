@@ -19,7 +19,7 @@ public interface UiUtils {
                 "                <a class=\"nav-link\" href=\"/tasks_1-Servlets/createTask\">Create task</a>\n" +
                 "            </li>\n" +
                 "            <li class=\"nav-item\">\n" +
-                "                <a class=\"nav-link\" href=\"\">My Tasks</a>\n" +
+                "                <a class=\"nav-link\" href=\"/tasks_1-Servlets/myTasks\">My Tasks</a>\n" +
                 "            </li>\n" +
                 "            <li class=\"nav-item\">\n" +
                 "                <a class=\"nav-link\" href=\"\">Notifications {count}</a>\n" +

@@ -16,7 +16,15 @@ public class TaskRepository {
             " \"user\".name as assigneeName, priority.value as priorityValue " +
             "FROM task " +
             "JOIN priority ON task.priority_id = priority.id " +
-            "JOIN \"user\" ON task.assignee_id = \"user\".id ORDER BY task.id";
+            "JOIN \"user\" ON task.assignee_id = \"user\".id " +
+            "ORDER BY task.id";
+    private static final String SQL_GET_USERNAME_TASKS = "SELECT task.id, task.name, task.deadline, task.completed, task.complete_date," +
+            " \"user\".name as assigneeName, priority.value as priorityValue " +
+            "FROM task " +
+            "JOIN priority ON task.priority_id = priority.id " +
+            "JOIN \"user\" ON task.assignee_id = \"user\".id " +
+            "WHERE \"user\".username = ? " +
+            "ORDER BY task.id";
 
     public boolean createTask(String name, LocalDateTime deadline, Long userId, Long priorityId, Long creatorId) {
         DbConnection dbConnection = new DbConnection();
@@ -42,6 +50,32 @@ public class TaskRepository {
         DbConnection dbConnection = new DbConnection();
         try (Connection connection = dbConnection.createConnection()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ALL_TASKS)) {
+                ResultSet resultSet = preparedStatement.executeQuery();
+                List<TaskDto> tasks = new ArrayList<>();
+                while (resultSet.next()) {
+                    tasks.add(new TaskDto(resultSet.getLong("id"),
+                            resultSet.getString("name"),
+                            resultSet.getObject("deadline", LocalDateTime.class),
+                            resultSet.getString("assigneeName"),
+                            resultSet.getString("priorityValue"),
+                            resultSet.getBoolean("completed"),
+                            resultSet.getObject("complete_date", LocalDateTime.class)
+                    ));
+                }
+                return tasks;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<TaskDto> findAllByAssigneeUsername(String username) {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_USERNAME_TASKS)) {
+                preparedStatement.setString(1, username);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 List<TaskDto> tasks = new ArrayList<>();
                 while (resultSet.next()) {

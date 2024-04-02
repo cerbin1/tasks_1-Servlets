@@ -4,6 +4,7 @@ import db.TaskRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaskService {
     private final TaskRepository taskRepository;
@@ -18,5 +19,9 @@ public class TaskService {
 
     public List<TaskDto> getAllTasks() {
         return taskRepository.findAll();
+    }
+
+    public List<TaskDto> getTasksForUser(String username) {
+        return taskRepository.findAllByAssigneeUsername(username);
     }
 }
