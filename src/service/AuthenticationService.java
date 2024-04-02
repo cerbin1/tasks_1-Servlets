@@ -16,6 +16,9 @@ public class AuthenticationService {
 
     public boolean authenticate(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
+        if (session == null) {
+            return false;
+        }
         String username = (String) session.getAttribute("username");
         String sessionId = tryGetSessionIdFromCookie(request);
         return userService.userIsLoggedIn(username, sessionId) && userService.userIsActive(username);
