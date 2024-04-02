@@ -32,7 +32,7 @@ public class EditTask extends HttpServlet {
             PrintWriter writer = response.getWriter();
             String taskId = request.getParameter("taskId");
 
-            EditTaskDto task = taskService.getTask(taskId);
+            EditTaskDto task = taskService.getTaskForEdit(taskId);
 
             List<UserDto> usersData = userService.getUsersData();
             StringBuilder usersMappedToOptions = new StringBuilder();

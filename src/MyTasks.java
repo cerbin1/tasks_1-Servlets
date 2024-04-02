@@ -40,7 +40,9 @@ public class MyTasks extends HttpServlet {
                             .append("<td>").append(task.getPriority()).append("</td>")
                             .append("<td>").append(task.isCompleted() ? "Yes" : "No").append("</td>")
                             .append("<td>").append(task.getCompleteDate() == null ? "-" : task.getCompleteDate().toString()).append("</td>")
-                            .append("<td>").append("Details").append("</td>")
+                            .append("<td>")
+                            .append("<a href=\"/tasks_1-Servlets/details?taskId=").append(task.getId()).append("\">Details</a>\n")
+                            .append("</td>")
                             .append("</tr>\n");
                 }
             }

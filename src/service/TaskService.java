@@ -25,7 +25,7 @@ public class TaskService {
     }
 
     public EditTaskDto getTaskForEdit(String taskId) {
-        return taskDao.findById(Long.parseLong(taskId));
+        return taskDao.findByIdForEdit(Long.parseLong(taskId));
     }
 
     public boolean updateTask(String taskId, String name, String deadline, String userId, String priorityId) {
@@ -35,5 +35,9 @@ public class TaskService {
                 LocalDateTime.parse(deadline),
                 Long.parseLong(userId),
                 Long.parseLong(priorityId));
+    }
+
+    public TaskDto getTask(String taskId) {
+        return taskDao.findById(Long.parseLong(taskId));
     }
 }
