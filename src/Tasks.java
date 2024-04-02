@@ -27,17 +27,21 @@ public class Tasks extends HttpServlet {
 
             List<TaskDto> tasksData = taskService.getAllTasks();
             StringBuilder taskList = new StringBuilder();
-            for (TaskDto task : tasksData) {
-                taskList
-                        .append("<tr>")
-                        .append("<th scope=\"row\">").append(task.getId()).append("</th>")
-                        .append("<td>").append(task.getName()).append("</td>")
-                        .append("<td>").append(task.getDeadline().toString()).append("</td>")
-                        .append("<td>").append(task.getAssignee()).append("</td>")
-                        .append("<td>").append(task.getPriority()).append("</td>")
-                        .append("<td>").append(task.isCompleted() ? "Yes" : "No").append("</td>")
-                        .append("<td>").append(task.getCompleteDate() == null ? "-" : task.getCompleteDate().toString()).append("</td>")
-                        .append("</tr>\n");
+            if (tasksData.isEmpty()) {
+                taskList.append("<span>No results</span>");
+            } else {
+                for (TaskDto task : tasksData) {
+                    taskList
+                            .append("<tr>")
+                            .append("<th scope=\"row\">").append(task.getId()).append("</th>")
+                            .append("<td>").append(task.getName()).append("</td>")
+                            .append("<td>").append(task.getDeadline().toString()).append("</td>")
+                            .append("<td>").append(task.getAssignee()).append("</td>")
+                            .append("<td>").append(task.getPriority()).append("</td>")
+                            .append("<td>").append(task.isCompleted() ? "Yes" : "No").append("</td>")
+                            .append("<td>").append(task.getCompleteDate() == null ? "-" : task.getCompleteDate().toString()).append("</td>")
+                            .append("</tr>\n");
+                }
             }
 
             writer.print("<html lang=\"en\">\n" +
