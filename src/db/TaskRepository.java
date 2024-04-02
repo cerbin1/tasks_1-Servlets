@@ -1,5 +1,6 @@
 package db;
 
+import service.EditTaskDto;
 import service.TaskDto;
 
 import java.sql.Connection;
@@ -25,6 +26,13 @@ public class TaskRepository {
             "JOIN \"user\" ON task.assignee_id = \"user\".id " +
             "WHERE \"user\".username = ? " +
             "ORDER BY task.id";
+    private static final String SQL_GET_TASK_BY_ID = "SELECT task.id, task.name, task.deadline, task.completed, task.complete_date," +
+            "task.assignee_id, task.priority_id " +
+            "FROM task " +
+            "WHERE task.id = ?";
+
+
+    private static final String SQL_UPDATE_TASK = "UPDATE task SET name = ?, deadline = ?, assignee_id = ?, priority_id = ? WHERE id = ?";
 
     public boolean createTask(String name, LocalDateTime deadline, Long userId, Long priorityId, Long creatorId) {
         DbConnection dbConnection = new DbConnection();
@@ -92,6 +100,46 @@ public class TaskRepository {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public EditTaskDto findById(Long id) {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_TASK_BY_ID)) {
+                preparedStatement.setLong(1, id);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                resultSet.next();
+                return new EditTaskDto(resultSet.getLong("id"),
+                        resultSet.getString("name"),
+                        resultSet.getObject("deadline", LocalDateTime.class),
+                        resultSet.getLong("assignee_id"),
+                        resultSet.getLong("priority_id"));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean updateById(Long taskId, String name, LocalDateTime deadline, Long assigneeId, Long priorityId) {
+        DbConnection dbConnection = new DbConnection();
+        Connection connection = dbConnection.createConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_TASK)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setObject(2, deadline);
+            preparedStatement.setLong(3, assigneeId);
+            preparedStatement.setLong(4, priorityId);
+            preparedStatement.setLong(5, taskId);
+            boolean taskUpdated = preparedStatement.executeUpdate() == 1;
+            if (!taskUpdated) {
+                throw new SQLException();
+            }
+            connection.close();
+            return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

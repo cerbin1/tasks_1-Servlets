@@ -4,7 +4,6 @@ import db.TaskRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TaskService {
     private final TaskRepository taskRepository;
@@ -23,5 +22,18 @@ public class TaskService {
 
     public List<TaskDto> getTasksForUser(String username) {
         return taskRepository.findAllByAssigneeUsername(username);
+    }
+
+    public EditTaskDto getTask(String taskId) {
+        return taskRepository.findById(Long.parseLong(taskId));
+    }
+
+    public boolean updateTask(String taskId, String name, String deadline, String userId, String priorityId) {
+        return taskRepository.updateById(
+                Long.parseLong(taskId),
+                name,
+                LocalDateTime.parse(deadline),
+                Long.parseLong(userId),
+                Long.parseLong(priorityId));
     }
 }

@@ -40,6 +40,7 @@ public class Tasks extends HttpServlet {
                             .append("<td>").append(task.getPriority()).append("</td>")
                             .append("<td>").append(task.isCompleted() ? "Yes" : "No").append("</td>")
                             .append("<td>").append(task.getCompleteDate() == null ? "-" : task.getCompleteDate().toString()).append("</td>")
+                            .append("<td>").append("<a href=\"editTask?taskId=").append(task.getId()).append("\">Edit</a>").append("</td>")
                             .append("</tr>\n");
                 }
             }
@@ -62,6 +63,7 @@ public class Tasks extends HttpServlet {
                     "<th scope=\"col\">Priority</th>" +
                     "<th scope=\"col\">Is Completed</th>" +
                     "<th scope=\"col\">Complete date</th>" +
+                    "<th scope=\"col\">Edit</th>" +
                     "</tr>" +
                     "</thead>" +
                     "<tbody>" +
