@@ -1,5 +1,6 @@
-package db;
+package db.dao;
 
+import db.DbConnection;
 import service.PriorityDto;
 
 import java.sql.Connection;
@@ -9,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PriorityRepository {
+public class PriorityDao {
     final String SQL_GET_ALL_PRIORITIES = "SELECT id, value FROM priority";
 
     public List<PriorityDto> findAll() {

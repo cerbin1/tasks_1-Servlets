@@ -1,6 +1,6 @@
-import db.TaskRepository;
-import db.UserActivationLinkRepository;
-import db.UserRepository;
+import db.dao.TaskDao;
+import db.dao.UserActivationLinkDao;
+import db.dao.UserDao;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,8 +16,8 @@ public class MyTasks extends HttpServlet {
     private final AuthenticationService authenticationService;
 
     public MyTasks() {
-        this.taskService = new TaskService(new TaskRepository());
-        this.authenticationService = new AuthenticationService(new UserService(new UserRepository(), new UserActivationLinkRepository(), new EmailSendingService()));
+        this.taskService = new TaskService(new TaskDao());
+        this.authenticationService = new AuthenticationService(new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService()));
     }
 
     @Override

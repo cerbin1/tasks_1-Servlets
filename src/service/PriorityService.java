@@ -1,18 +1,18 @@
 package service;
 
-import db.PriorityRepository;
+import db.dao.PriorityDao;
 
 import java.util.List;
 
 public class PriorityService {
-    private final PriorityRepository priorityRepository;
+    private final PriorityDao priorityDao;
 
-    public PriorityService(PriorityRepository priorityRepository) {
-        this.priorityRepository = priorityRepository;
+    public PriorityService(PriorityDao priorityDao) {
+        this.priorityDao = priorityDao;
     }
 
     public List<PriorityDto> getPrioritiesData() {
-        return priorityRepository.findAll();
+        return priorityDao.findAll();
     }
 
 }

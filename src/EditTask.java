@@ -1,7 +1,7 @@
-import db.PriorityRepository;
-import db.TaskRepository;
-import db.UserActivationLinkRepository;
-import db.UserRepository;
+import db.dao.PriorityDao;
+import db.dao.TaskDao;
+import db.dao.UserActivationLinkDao;
+import db.dao.UserDao;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,9 +20,9 @@ public class EditTask extends HttpServlet {
     private final TaskService taskService;
 
     public EditTask() {
-        this.taskService = new TaskService(new TaskRepository());
-        this.priorityService = new PriorityService(new PriorityRepository());
-        this.userService = new UserService(new UserRepository(), new UserActivationLinkRepository(), new EmailSendingService());
+        this.taskService = new TaskService(new TaskDao());
+        this.priorityService = new PriorityService(new PriorityDao());
+        this.userService = new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService());
         this.authenticationService = new AuthenticationService(userService);
     }
 

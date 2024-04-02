@@ -1,5 +1,5 @@
-import db.UserActivationLinkRepository;
-import db.UserRepository;
+import db.dao.UserActivationLinkDao;
+import db.dao.UserDao;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,7 +13,7 @@ public class Register extends HttpServlet {
     private final UserService userService;
 
     public Register() {
-        userService = new UserService(new UserRepository(), new UserActivationLinkRepository(), new EmailSendingService());
+        userService = new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService());
     }
 
     @Override

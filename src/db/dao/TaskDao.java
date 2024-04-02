@@ -1,5 +1,6 @@
-package db;
+package db.dao;
 
+import db.DbConnection;
 import service.EditTaskDto;
 import service.TaskDto;
 
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskRepository {
+public class TaskDao {
     private static final String SQL_CREATE_TASK = "INSERT INTO task (\"name\", deadline, assignee_id, priority_id, creator_id) VALUES (?, ?, ?, ?, ?)";
     private static final String SQL_GET_ALL_TASKS = "SELECT task.id, task.name, task.deadline, task.completed, task.complete_date," +
             " \"user\".name as assigneeName, priority.value as priorityValue " +

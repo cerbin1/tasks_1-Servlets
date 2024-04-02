@@ -1,5 +1,6 @@
-package db;
+package db.dao;
 
+import db.DbConnection;
 import service.UserDto;
 
 import java.sql.Connection;
@@ -12,7 +13,7 @@ import java.util.List;
 import static java.sql.ResultSet.CONCUR_READ_ONLY;
 import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
 
-public class UserRepository {
+public class UserDao {
     final String SQL_CREATE_USER = "INSERT INTO \"user\" (email, username, password, name, surname) VALUES (?, ?, ?, ?, ?)";
     final String SQL_SELECT_USERS = "SELECT id FROM \"user\" WHERE username = ? AND password = ?";
     final String SQL_SELECT_USER_LOGINS = "SELECT * FROM user_login WHERE username = ? AND session_id = ? AND active = TRUE";

@@ -1,4 +1,6 @@
-package db;
+package db.dao;
+
+import db.DbConnection;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public class UserActivationLinkRepository {
+public class UserActivationLinkDao {
 
     private static final String SQL_CREATE_USER = "INSERT INTO user_activation_link (link_id, username) VALUES (?, ?)";
     private static final String SQL_GET_ACTIVATION_LINK = "SELECT username FROM user_activation_link WHERE link_id = ? AND expired = FALSE LIMIT 1;";

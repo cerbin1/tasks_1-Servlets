@@ -1,5 +1,5 @@
-import db.UserActivationLinkRepository;
-import db.UserRepository;
+import db.dao.UserActivationLinkDao;
+import db.dao.UserDao;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +18,7 @@ public class Login extends HttpServlet {
     private final AuthenticationService authenticationService;
 
     public Login() {
-        userService = new UserService(new UserRepository(), new UserActivationLinkRepository(), new EmailSendingService());
+        userService = new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService());
         authenticationService = new AuthenticationService(userService);
     }
 
