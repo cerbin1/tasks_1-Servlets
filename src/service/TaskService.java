@@ -44,4 +44,8 @@ public class TaskService {
     public boolean removeTask(String taskId) {
         return taskDao.removeById(Long.parseLong(taskId));
     }
+
+    public List<TaskDto> getTasksByName(String name) {
+        return taskDao.findAllByName(name);
+    }
 }

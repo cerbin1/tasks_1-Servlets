@@ -80,6 +80,12 @@ public interface UiUtils {
                         "<tbody>" +
                         taskList +
                         "</tbody>" +
-                        "</table>\n";
+                        "</table>\n" +
+                        "\n<h1>Filters</h1>" +
+                        "<div class=\"form-group row\">\n" +
+                        "<form action=\"/tasks_1-Servlets/searchByName\" method=\"get\">\n" +
+                        "<input type=\"text\" class=\"form-control\" name=\"name\" />\n" +
+                        "<button type=\"submit\" class=\"btn btn-primary\">Search by name</button>\n" +
+                        "</div>";
     }
 }

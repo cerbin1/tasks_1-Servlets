@@ -4,6 +4,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
     http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+
     <!-- SERVLET-DEFINITIONS-START -->
     <servlet>
         <servlet-name>RegisterServlet</servlet-name>
@@ -45,7 +47,12 @@
         <servlet-name>TaskDetailsServlet</servlet-name>
         <servlet-class>TaskDetails</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SearchByNameServlet</servlet-name>
+        <servlet-class>SearchByName</servlet-class>
+    </servlet>
     <!-- SERVLET-DEFINITIONS-END -->
+
 
     <!-- SERVLET-MAPPINGS-START -->
     <servlet-mapping>
@@ -92,7 +99,12 @@
         <servlet-name>TaskDetailsServlet</servlet-name>
         <url-pattern>/details</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchByNameServlet</servlet-name>
+        <url-pattern>/searchByName</url-pattern>
+    </servlet-mapping>
     <!-- SERVLET-MAPPINGS-END -->
+
 
     <!-- SERVLET-LISTENERS-START -->
     <listener>
@@ -101,4 +113,6 @@
         </listener-class>
     </listener>
     <!-- SERVLET-LISTENERS-END -->
+
+
 </web-app>
