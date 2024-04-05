@@ -38,6 +38,10 @@
         <servlet-class>EditTask</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>RemoveTaskServlet</servlet-name>
+        <servlet-class>RemoveTask</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>TaskDetailsServlet</servlet-name>
         <servlet-class>TaskDetails</servlet-class>
     </servlet>
@@ -79,6 +83,10 @@
     <servlet-mapping>
         <servlet-name>EditTaskServlet</servlet-name>
         <url-pattern>/editTask</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveTaskServlet</servlet-name>
+        <url-pattern>/removeTask</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>TaskDetailsServlet</servlet-name>

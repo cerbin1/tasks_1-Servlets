@@ -1,3 +1,7 @@
+import service.TaskDto;
+
+import java.util.List;
+
 public interface UiUtils {
 
     static String navbarHtml() {
@@ -36,5 +40,28 @@ public interface UiUtils {
                 "        </ul>\n" +
                 "    </div>\n" +
                 "</nav>\n";
+    }
+
+    static StringBuilder taskListToHtml(List<TaskDto> tasksData) {
+        StringBuilder taskList = new StringBuilder();
+        if (tasksData.isEmpty()) {
+            taskList.append("<span>No results</span>");
+        } else {
+            for (TaskDto task : tasksData) {
+                taskList
+                        .append("<tr>")
+                        .append("<th scope=\"row\">").append(task.getId()).append("</th>")
+                        .append("<td>").append(task.getName()).append("</td>")
+                        .append("<td>").append(task.getDeadline().toString()).append("</td>")
+                        .append("<td>").append(task.getAssignee()).append("</td>")
+                        .append("<td>").append(task.getPriority()).append("</td>")
+                        .append("<td>").append(task.isCompleted() ? "Yes" : "No").append("</td>")
+                        .append("<td>").append(task.getCompleteDate() == null ? "-" : task.getCompleteDate().toString()).append("</td>")
+                        .append("<td>").append("<a href=\"editTask?taskId=").append(task.getId()).append("\">Edit</a>").append("</td>")
+                        .append("<td>").append("<a class=\"btn btn-danger\" href=\"removeTask?taskId=").append(task.getId()).append("\">Remove</a>").append("</td>")
+                        .append("</tr>\n");
+            }
+        }
+        return taskList;
     }
 }

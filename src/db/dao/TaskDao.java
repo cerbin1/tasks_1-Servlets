@@ -42,6 +42,8 @@ public class TaskDao {
 
     private static final String SQL_UPDATE_TASK = "UPDATE task SET name = ?, deadline = ?, assignee_id = ?, priority_id = ? WHERE id = ?";
 
+    private static final String SQL_DELETE_TASK_BY_ID = "DELETE FROM task WHERE id = ?";
+
     public boolean createTask(String name, LocalDateTime deadline, Long userId, Long priorityId, Long creatorId) {
         DbConnection dbConnection = new DbConnection();
         Connection connection = dbConnection.createConnection();
@@ -170,6 +172,22 @@ public class TaskDao {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean removeById(Long taskId) {
+        DbConnection dbConnection = new DbConnection();
+        Connection connection = dbConnection.createConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_TASK_BY_ID)) {
+            preparedStatement.setLong(1, taskId);
+            boolean taskDeleted = preparedStatement.executeUpdate() == 1;
+            if (!taskDeleted) {
+                throw new SQLException();
+            }
+            connection.close();
+            return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
