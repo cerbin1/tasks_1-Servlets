@@ -135,7 +135,7 @@ public class CreateTask extends HttpServlet {
                         "</body>\n" +
                         "</html>");
             } else {
-                notificationService.createNotification(new NotificationDto("New Task", taskId, userId));
+                notificationService.createNotification("New Task", taskId, userId);
                 response.sendRedirect(APP_BASE_PATH + "/tasks");
             }
         } else {
