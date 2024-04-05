@@ -40,9 +40,14 @@ public class Notifications extends HttpServlet {
                             .append("<td>").append(notification.isRead() ? "Yes" : "<b>No</b>").append("</td>")
                             .append("<td>").append(notification.getReadDate() == null ? "-" : notification.getReadDate()).append("</td>")
                             .append("<td>").append(notification.getUserNameAssigned()).append("</td>")
+
                             .append("<td><a href=\"/tasks_1-Servlets/details?taskId=").append(notification.getTaskId()).append("\">Go to task</a></td>\n")
                             .append("<td><a class=\"btn btn-primary\" disabled=").append(notification.isRead()).append(" href=\"TODO=").append(notification.getId()).append("\">Mark as read</a></td>\n")
-                            .append("<td>").append("<a class=\"btn btn-danger\" href=\"TODO=").append(notification.getId()).append("\">Remove</a>").append("</td>")
+                            .append("<td>")
+                            .append("<form action=\"/tasks_1-Servlets/removeNotification?notificationId=").append(notification.getId()).append("\" method=\"post\">\n")
+                            .append("<button class=\"btn btn-danger\" type=\"submit\">Remove</button>")
+                            .append("</form>")
+                            .append("</td>")
                             .append("</tr>\n");
                 }
             }

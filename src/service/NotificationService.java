@@ -19,4 +19,8 @@ public class NotificationService {
     public List<NotificationDto> getAllNotifications() {
         return notificationDao.findAll();
     }
+
+    public boolean removeNotification(String notificationId) {
+        return notificationDao.remove(Long.parseLong(notificationId));
+    }
 }

@@ -55,6 +55,10 @@
         <servlet-name>NotificationsServlet</servlet-name>
         <servlet-class>Notifications</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RemoveNotificationServlet</servlet-name>
+        <servlet-class>RemoveNotification</servlet-class>
+    </servlet>
     <!-- SERVLET-DEFINITIONS-END -->
 
 
@@ -110,6 +114,10 @@
     <servlet-mapping>
         <servlet-name>NotificationsServlet</servlet-name>
         <url-pattern>/notifications</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveNotificationServlet</servlet-name>
+        <url-pattern>/removeNotification</url-pattern>
     </servlet-mapping>
     <!-- SERVLET-MAPPINGS-END -->
 

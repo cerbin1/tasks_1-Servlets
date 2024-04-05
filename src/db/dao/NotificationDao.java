@@ -63,4 +63,18 @@ public class NotificationDao {
             throw new RuntimeException(e);
         }
     }
+
+    public boolean remove(Long notificationId) {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM notification WHERE id = ?")) {
+                preparedStatement.setLong(1, notificationId);
+                return preparedStatement.executeUpdate() == 1;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
