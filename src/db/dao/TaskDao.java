@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDao {
-    private static final String SQL_CREATE_TASK = "INSERT INTO task (\"name\", deadline, assignee_id, priority_id, creator_id) VALUES (?, ?, ?, ?, ?)";
+    private static final String SQL_CREATE_TASK = "INSERT INTO task (\"name\", deadline, assignee_id, priority_id, creator_id) VALUES (?, ?, ?, ?, ?) RETURNING id";
     private static final String SQL_GET_ALL_TASKS = "SELECT task.id, task.name, task.deadline, task.completed, task.complete_date," +
             " \"user\".name as assigneeName, priority.value as priorityValue " +
             "FROM task " +
@@ -50,7 +50,7 @@ public class TaskDao {
             "JOIN \"user\" ON task.assignee_id = \"user\".id " +
             "WHERE task.\"name\" LIKE '%' || ? || '%' ORDER BY id";
 
-    public boolean createTask(String name, LocalDateTime deadline, Long userId, Long priorityId, Long creatorId) {
+    public Long createTask(String name, LocalDateTime deadline, Long userId, Long priorityId, Long creatorId) {
         DbConnection dbConnection = new DbConnection();
         Connection connection = dbConnection.createConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_TASK)) {
@@ -59,12 +59,14 @@ public class TaskDao {
             preparedStatement.setLong(3, userId);
             preparedStatement.setLong(4, priorityId);
             preparedStatement.setLong(5, creatorId);
-            boolean taskCreated = preparedStatement.executeUpdate() == 1;
-            if (!taskCreated) {
+
+            if (preparedStatement.execute() && preparedStatement.getResultSet().next()) {
+                connection.close();
+                return preparedStatement.getResultSet().getLong(1);
+            } else {
+                connection.close();
                 throw new SQLException();
             }
-            connection.close();
-            return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

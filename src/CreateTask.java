@@ -1,7 +1,4 @@
-import db.dao.PriorityDao;
-import db.dao.TaskDao;
-import db.dao.UserActivationLinkDao;
-import db.dao.UserDao;
+import db.dao.*;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,12 +15,14 @@ public class CreateTask extends HttpServlet {
     private final PriorityService priorityService;
     private final AuthenticationService authenticationService;
     private final TaskService taskService;
+    private final NotificationService notificationService;
 
     public CreateTask() {
         this.taskService = new TaskService(new TaskDao());
         this.priorityService = new PriorityService(new PriorityDao());
         this.userService = new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService());
         this.authenticationService = new AuthenticationService(userService);
+        this.notificationService = new NotificationService(new NotificationDao());
     }
 
     @Override
@@ -119,9 +118,8 @@ public class CreateTask extends HttpServlet {
             String userId = request.getParameter("user");
             String priorityId = request.getParameter("priority");
             PrintWriter writer = response.getWriter();
-            if (taskService.create(name, deadline, userId, priorityId, (String) request.getSession(false).getAttribute("userId"))) {
-                response.sendRedirect(APP_BASE_PATH + "/tasks");
-            } else {
+            Long taskId = taskService.create(name, deadline, userId, priorityId, (String) request.getSession(false).getAttribute("userId"));
+            if (taskId == null) {
                 writer.print("<html lang=\"en\">\n" +
                         "<head>\n" +
                         "    <title></title>\n" +
@@ -136,6 +134,9 @@ public class CreateTask extends HttpServlet {
                         "</div>" +
                         "</body>\n" +
                         "</html>");
+            } else {
+                notificationService.createNotification(new NotificationDto("New Task", taskId, userId));
+                response.sendRedirect(APP_BASE_PATH + "/tasks");
             }
         } else {
             response.sendRedirect("authError.html");

@@ -12,7 +12,7 @@ public class TaskService {
         this.taskDao = taskDao;
     }
 
-    public boolean create(String name, String deadline, String userId, String priorityId, String creatorId) {
+    public Long create(String name, String deadline, String userId, String priorityId, String creatorId) {
         return taskDao.createTask(name, LocalDateTime.parse(deadline), Long.parseLong(userId), Long.parseLong(priorityId), Long.parseLong(creatorId));
     }
 
