@@ -4,11 +4,13 @@ import db.dao.UserDao;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import service.*;
+import service.AuthenticationService;
+import service.EmailSendingService;
+import service.TaskService;
+import service.UserService;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 
 public class Tasks extends HttpServlet {
 
@@ -24,7 +26,7 @@ public class Tasks extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (authenticationService.authenticate(request)) {
             PrintWriter writer = response.getWriter();
-            StringBuilder taskList = UiUtils.taskListToHtml(taskService.getAllTasks());
+            String tasks = UiUtils.taskListToHtmlTable(taskService.getAllTasks());
 
             writer.print("<html lang=\"en\">\n" +
                     "<head>\n" +
@@ -34,24 +36,7 @@ public class Tasks extends HttpServlet {
                     "</head>\n" +
                     "<body>\n" +
                     UiUtils.navbarHtml() +
-                    "<table class=\"table\">" +
-                    "<thead>" +
-                    "<tr>" +
-                    "<th scope=\"col\">#</th>" +
-                    "<th scope=\"col\">Name</th>" +
-                    "<th scope=\"col\">Deadline</th>" +
-                    "<th scope=\"col\">Assignee</th>" +
-                    "<th scope=\"col\">Priority</th>" +
-                    "<th scope=\"col\">Is Completed</th>" +
-                    "<th scope=\"col\">Complete date</th>" +
-                    "<th scope=\"col\">Edit</th>" +
-                    "<th scope=\"col\">Remove</th>" +
-                    "</tr>" +
-                    "</thead>" +
-                    "<tbody>" +
-                    taskList +
-                    "</tbody>" +
-                    "</table>" +
+                    tasks +
                     "</body>\n" +
                     "</html>");
         } else {

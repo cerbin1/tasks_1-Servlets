@@ -42,7 +42,7 @@ public interface UiUtils {
                 "</nav>\n";
     }
 
-    static StringBuilder taskListToHtml(List<TaskDto> tasksData) {
+    static String taskListToHtmlTable(List<TaskDto> tasksData) {
         StringBuilder taskList = new StringBuilder();
         if (tasksData.isEmpty()) {
             taskList.append("<span>No results</span>");
@@ -62,6 +62,24 @@ public interface UiUtils {
                         .append("</tr>\n");
             }
         }
-        return taskList;
+        return
+                "<table class=\"table\">" +
+                        "<thead>" +
+                        "<tr>" +
+                        "<th scope=\"col\">#</th>" +
+                        "<th scope=\"col\">Name</th>" +
+                        "<th scope=\"col\">Deadline</th>" +
+                        "<th scope=\"col\">Assignee</th>" +
+                        "<th scope=\"col\">Priority</th>" +
+                        "<th scope=\"col\">Is Completed</th>" +
+                        "<th scope=\"col\">Complete date</th>" +
+                        "<th scope=\"col\">Edit</th>" +
+                        "<th scope=\"col\">Remove</th>" +
+                        "</tr>" +
+                        "</thead>" +
+                        "<tbody>" +
+                        taskList +
+                        "</tbody>" +
+                        "</table>\n";
     }
 }

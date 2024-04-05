@@ -27,7 +27,7 @@ public class RemoveTask extends HttpServlet {
             String taskId = request.getParameter("taskId");
             boolean removed = taskService.removeTask(taskId);
             PrintWriter writer = response.getWriter();
-            StringBuilder taskList = UiUtils.taskListToHtml(taskService.getAllTasks());
+            String tasks = UiUtils.taskListToHtmlTable(taskService.getAllTasks());
 
             writer.print("<html lang=\"en\">\n" +
                     "<head>\n" +
@@ -46,24 +46,7 @@ public class RemoveTask extends HttpServlet {
                                     "Error while deleting task!\n" +
                                     "<button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
                                     "</div>") +
-                    "<table class=\"table\">" +
-                    "<thead>" +
-                    "<tr>" +
-                    "<th scope=\"col\">#</th>" +
-                    "<th scope=\"col\">Name</th>" +
-                    "<th scope=\"col\">Deadline</th>" +
-                    "<th scope=\"col\">Assignee</th>" +
-                    "<th scope=\"col\">Priority</th>" +
-                    "<th scope=\"col\">Is Completed</th>" +
-                    "<th scope=\"col\">Complete date</th>" +
-                    "<th scope=\"col\">Edit</th>" +
-                    "<th scope=\"col\">Remove</th>" +
-                    "</tr>" +
-                    "</thead>" +
-                    "<tbody>" +
-                    taskList +
-                    "</tbody>" +
-                    "</table>" +
+                    tasks +
                     "</body>\n" +
                     "</html>");
         } else {
