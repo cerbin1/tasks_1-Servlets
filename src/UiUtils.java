@@ -1,3 +1,4 @@
+import service.NotificationDto;
 import service.TaskDto;
 
 import java.util.List;
@@ -87,5 +88,52 @@ public interface UiUtils {
                         "<input type=\"text\" class=\"form-control\" name=\"name\" />\n" +
                         "<button type=\"submit\" class=\"btn btn-primary\">Search by name</button>\n" +
                         "</div>";
+    }
+
+    static String notificationListToHtmlTable(List<NotificationDto> notificationsData) {
+        StringBuilder notifications = new StringBuilder();
+        if (notificationsData.isEmpty()) {
+            notifications.append("<span>No results</span>");
+        } else {
+            for (NotificationDto notification : notificationsData) {
+                notifications
+                        .append("<tr>")
+                        .append("<th scope=\"row\">").append(notification.getId()).append("</th>")
+                        .append("<td>").append(notification.getName()).append("</td>")
+                        .append("<td>").append(notification.getTaskName()).append("</td>")
+                        .append("<td>").append(notification.getCreateDate() == null ? "-" : notification.getCreateDate()).append("</td>")
+                        .append("<td>").append(notification.isRead() ? "Yes" : "<b>No</b>").append("</td>")
+                        .append("<td>").append(notification.getReadDate() == null ? "-" : notification.getReadDate()).append("</td>")
+                        .append("<td>").append(notification.getUserNameAssigned()).append("</td>")
+                        .append("<td><a href=\"/tasks_1-Servlets/details?taskId=").append(notification.getTaskId()).append("\">Go to task</a></td>\n")
+                        .append("<td><a class=\"btn btn-primary ").append(notification.isRead() ? "btn disabled\"" : "\"").append(" href=\"/tasks_1-Servlets/readNotification?notificationId=").append(notification.getId()).append("\">Mark as read</a></td>\n")
+                        .append("<td>")
+                        .append("<form action=\"/tasks_1-Servlets/removeNotification?notificationId=").append(notification.getId()).append("\" method=\"post\">\n")
+                        .append("<button class=\"btn btn-danger\" type=\"submit\">Remove</button>")
+                        .append("</form>")
+                        .append("</td>")
+                        .append("</tr>\n");
+            }
+        }
+
+        return "    <table class=\"table\">\n" +
+                "      <thead>\n" +
+                "        <tr>\n" +
+                "          <th scope=\"col\">#</th>\n" +
+                "          <th scope=\"col\">Name</th>\n" +
+                "          <th scope=\"col\">Task name</th>\n" +
+                "          <th scope=\"col\">Create date</th>\n" +
+                "          <th scope=\"col\">Is read</th>\n" +
+                "          <th scope=\"col\">Read date</th>\n" +
+                "          <th scope=\"col\">User assigned</th>\n" +
+                "          <th scope=\"col\">Link</th>\n" +
+                "          <th scope=\"col\">Mark as read</th>\n" +
+                "          <th scope=\"col\">Remove</th>\n" +
+                "        </tr>\n" +
+                "      </thead>\n" +
+                "      <tbody>\n" +
+                notifications +
+                "      </tbody>\n" +
+                "    </table>";
     }
 }

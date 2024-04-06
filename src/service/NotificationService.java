@@ -23,4 +23,8 @@ public class NotificationService {
     public boolean removeNotification(String notificationId) {
         return notificationDao.remove(Long.parseLong(notificationId));
     }
+
+    public boolean markNotificationAsRead(String notificationId) {
+        return notificationDao.markAsRead(Long.parseLong(notificationId));
+    }
 }

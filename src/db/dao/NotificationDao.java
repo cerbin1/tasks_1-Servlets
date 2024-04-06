@@ -20,6 +20,7 @@ public class NotificationDao {
             "JOIN task ON notification.task_id = task.id " +
             "JOIN \"user\" ON notification.user_id = \"user\".id " +
             "ORDER BY notification.id";
+    public static final String SQL_MARK_AS_READ = "UPDATE notification SET read = true, read_date = ? WHERE id = ?";
 
     public void create(String name, Long taskId, Long userId) {
         DbConnection dbConnection = new DbConnection();
@@ -69,6 +70,21 @@ public class NotificationDao {
         try (Connection connection = dbConnection.createConnection()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM notification WHERE id = ?")) {
                 preparedStatement.setLong(1, notificationId);
+                return preparedStatement.executeUpdate() == 1;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean markAsRead(Long notificationId) {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_MARK_AS_READ)) {
+                preparedStatement.setObject(1, LocalDateTime.now());
+                preparedStatement.setLong(2, notificationId);
                 return preparedStatement.executeUpdate() == 1;
             } catch (SQLException e) {
                 throw new RuntimeException(e);
