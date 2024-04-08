@@ -25,7 +25,7 @@ public class UserDao {
     final String SQL_GET_BY_EMAIL = "SELECT * FROM \"user\" WHERE email = ?";
     final String SQL_GET_BY_USERNAME = "SELECT * FROM \"user\" WHERE username = ?";
     final String SQL_GET_ALL_USERS = "SELECT id, name, username FROM \"user\"";
-    final String SQL_GET_ALL_USERS_FOR_ADMIN_PANEL = "SELECT id, email, username, name, surname, active  FROM \"user\"";
+    final String SQL_GET_ALL_USERS_FOR_ADMIN_PANEL = "SELECT id, email, username, name, surname, active, (SELECT COUNT(*) FROM chat_message WHERE chat_message.sender_id = \"user\".id) AS messagesCount FROM \"user\"";
     final String SQL_REMOVE_USER = "DELETE FROM \"user\" WHERE id = ?";
 
 
@@ -201,8 +201,7 @@ public class UserDao {
                             resultSet.getString("name"),
                             resultSet.getString("surname"),
                             resultSet.getBoolean("active"),
-                            0L
-//                            resultSet.getLong("messagesCount"),
+                            resultSet.getLong("messagesCount")
                     ));
                 }
                 return allUsers;

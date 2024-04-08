@@ -1,3 +1,4 @@
+import db.dao.ChatMessageDao;
 import db.dao.TaskDao;
 import db.dao.UserActivationLinkDao;
 import db.dao.UserDao;
@@ -8,15 +9,18 @@ import service.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 public class TaskDetails extends HttpServlet {
 
     private final TaskService taskService;
     private final AuthenticationService authenticationService;
+    private final ChatMessageService chatMessageService;
 
     public TaskDetails() {
         this.taskService = new TaskService(new TaskDao());
         this.authenticationService = new AuthenticationService(new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService()));
+        this.chatMessageService = new ChatMessageService(new ChatMessageDao());
     }
 
     @Override
@@ -24,7 +28,27 @@ public class TaskDetails extends HttpServlet {
         if (authenticationService.authenticate(request)) {
             String taskId = request.getParameter("taskId");
             TaskDto task = taskService.getTask(taskId);
+            String userId = (String) request.getSession().getAttribute("userId");
             PrintWriter writer = response.getWriter();
+
+            List<ChatMessageDto> taskChatMessages = chatMessageService.getTaskChatMessages(taskId);
+            StringBuilder chatMessages = new StringBuilder();
+            if (taskChatMessages.isEmpty()) {
+                chatMessages.append("<p>No messages yet.</p>");
+            } else {
+                for (ChatMessageDto chatMessage : taskChatMessages) {
+                    if (chatMessage.getSenderId().equals(userId)) {
+                        chatMessages.append("<div class=\"d-flex flex-row\">");
+                    } else {
+                        chatMessages.append("<div class=\"d-flex flex-row-reverse\">");
+                    }
+                    chatMessages.append("<div>");
+                    chatMessages.append("<b>").append(chatMessage.getSenderName()).append(":</b>");
+                    chatMessages.append("<p>").append(chatMessage.getContent()).append("</p>");
+                    chatMessages.append("</div>");
+                    chatMessages.append("</div>");
+                }
+            }
 
             writer.print("<html lang=\"en\">\n" +
                     "<head>\n" +
@@ -59,6 +83,11 @@ public class TaskDetails extends HttpServlet {
                     "        <h1>Category</h1>\n" +
                     "        <h1>Subtasks</h1>\n" +
                     "        <h1>Chat</h1>\n" +
+                    chatMessages +
+                    "            <form action=\"/tasks_1-Servlets/createChatMessage?taskId=" + taskId + "\" method=\"post\">\n" +
+                    "              <input type=\"text\" class=\"form-control\" name=\"messageContent\"  placeholder='Message content'/>\n" +
+                    "              <button type=\"submit\" class=\"btn btn-primary\">Send Message</button>\n" +
+                    "            </form>" +
                     "        <h1>Files</h1>\n" +
                     "        <h1>Worklogs</h1>\n" +
                     "    </div>\n" +

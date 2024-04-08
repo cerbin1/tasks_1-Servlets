@@ -67,6 +67,10 @@
         <servlet-name>AdminPanelServlet</servlet-name>
         <servlet-class>AdminPanel</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CreateChatMessageServlet</servlet-name>
+        <servlet-class>CreateChatMessage</servlet-class>
+    </servlet>
     <!-- SERVLET-DEFINITIONS-END -->
 
 
@@ -138,6 +142,10 @@
     <servlet-mapping>
         <servlet-name>AdminPanelServlet</servlet-name>
         <url-pattern>/removeUser</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateChatMessageServlet</servlet-name>
+        <url-pattern>/createChatMessage</url-pattern>
     </servlet-mapping>
     <!-- SERVLET-MAPPINGS-END -->
 
