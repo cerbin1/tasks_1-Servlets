@@ -22,7 +22,7 @@ public class ReminderScheduler {
     public void sendEmailReminders() {
         List<TaskReminderDto> remindersToSend = taskReminderService.getRemindersToSend();
         remindersToSend.forEach(taskReminder -> {
-            String linkToTaskDetails = APP_BASE_PATH + "/details/taskId=" + +taskReminder.getTaskId();
+            String linkToTaskDetails = APP_BASE_PATH + "/details/taskId=" + taskReminder.getTaskId();
             String emailContent = String.format("I would like to remind you that you have a task to accomplish. Task name: %s Link: %s",
                     taskReminder.getTaskName(), linkToTaskDetails);
             emailSendingService.sendEmail("Task reminder", emailContent, taskReminder.getAssigneeEmail());
