@@ -63,6 +63,10 @@
         <servlet-name>ReadNotificationServlet</servlet-name>
         <servlet-class>ReadNotification</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AdminPanelServlet</servlet-name>
+        <servlet-class>AdminPanel</servlet-class>
+    </servlet>
     <!-- SERVLET-DEFINITIONS-END -->
 
 
@@ -126,6 +130,10 @@
     <servlet-mapping>
         <servlet-name>ReadNotificationServlet</servlet-name>
         <url-pattern>/readNotification</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminPanelServlet</servlet-name>
+        <url-pattern>/adminPanel</url-pattern>
     </servlet-mapping>
     <!-- SERVLET-MAPPINGS-END -->
 

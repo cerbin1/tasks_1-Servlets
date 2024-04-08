@@ -1,6 +1,7 @@
 package db.dao;
 
 import db.DbConnection;
+import service.AdminPanelUserDto;
 import service.UserDto;
 
 import java.sql.Connection;
@@ -24,6 +25,7 @@ public class UserDao {
     final String SQL_GET_BY_EMAIL = "SELECT * FROM \"user\" WHERE email = ?";
     final String SQL_GET_BY_USERNAME = "SELECT * FROM \"user\" WHERE username = ?";
     final String SQL_GET_ALL_USERS = "SELECT id, name, username FROM \"user\"";
+    final String SQL_GET_ALL_USERS_FOR_ADMIN_PANEL = "SELECT id, email, username, name, surname, active  FROM \"user\"";
 
 
     public void createUser(String email, String username, String hashedPassword, String name, String surname) {
@@ -174,6 +176,33 @@ public class UserDao {
                 List<UserDto> allUsers = new ArrayList<>();
                 while (resultSet.next()) {
                     allUsers.add(new UserDto(resultSet.getLong(1), resultSet.getString(2), resultSet.getString(3)));
+                }
+                return allUsers;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<AdminPanelUserDto> findAllForAdminPanel() {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_ALL_USERS_FOR_ADMIN_PANEL)) {
+                ResultSet resultSet = preparedStatement.executeQuery();
+                List<AdminPanelUserDto> allUsers = new ArrayList<>();
+                while (resultSet.next()) {
+                    allUsers.add(new AdminPanelUserDto(
+                            resultSet.getLong(1),
+                            resultSet.getString("email"),
+                            resultSet.getString("username"),
+                            resultSet.getString("name"),
+                            resultSet.getString("surname"),
+                            resultSet.getBoolean("active"),
+                            0L
+//                            resultSet.getLong("messagesCount"),
+                    ));
                 }
                 return allUsers;
             } catch (SQLException e) {

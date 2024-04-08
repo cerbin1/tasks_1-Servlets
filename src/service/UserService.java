@@ -86,4 +86,8 @@ public class UserService {
     public boolean validateNoUserWithGivenEmailAndUsername(String email, String username) {
         return !userDao.existsByEmail(email) && !userDao.existsByUsername(username);
     }
+
+    public List<AdminPanelUserDto> getUsersForAdminPanel() {
+        return userDao.findAllForAdminPanel();
+    }
 }

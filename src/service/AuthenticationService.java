@@ -31,4 +31,13 @@ public class AuthenticationService {
                 .findFirst();
         return jsessionidCookie.orElseThrow().getValue();
     }
+
+    public boolean isAdmin(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            return false;
+        }
+        String username = (String) session.getAttribute("username");
+        return username.equals("admin");
+    }
 }
