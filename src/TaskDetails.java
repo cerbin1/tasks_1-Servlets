@@ -1,7 +1,4 @@
-import db.dao.ChatMessageDao;
-import db.dao.TaskDao;
-import db.dao.UserActivationLinkDao;
-import db.dao.UserDao;
+import db.dao.*;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,11 +13,13 @@ public class TaskDetails extends HttpServlet {
     private final TaskService taskService;
     private final AuthenticationService authenticationService;
     private final ChatMessageService chatMessageService;
+    private final SubtaskService subtaskService;
 
     public TaskDetails() {
         this.taskService = new TaskService(new TaskDao());
         this.authenticationService = new AuthenticationService(new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService()));
         this.chatMessageService = new ChatMessageService(new ChatMessageDao());
+        this.subtaskService = new SubtaskService(new SubtaskDao());
     }
 
     @Override
@@ -47,6 +46,24 @@ public class TaskDetails extends HttpServlet {
                     chatMessages.append("<p>").append(chatMessage.getContent()).append("</p>");
                     chatMessages.append("</div>");
                     chatMessages.append("</div>");
+                }
+            }
+
+            List<SubtaskDto> subtasksData = subtaskService.getTaskSubtasks(taskId);
+            StringBuilder subtasks = new StringBuilder();
+            if (subtasksData.isEmpty()) {
+                chatMessages.append("<p>No subtasks yet.</p>");
+            } else {
+                for (SubtaskDto subtask : subtasksData) {
+                    subtasks.append("<div class=\"d-flex align-items-center justify-content-center\">")
+                            .append("<div class=\"col-md-3\">")
+                            .append("<div class=\"input-group\">")
+                            .append("<div id=\"").append(subtask.getSequence()).append("\" class=\"col-md-9\" style=\"textAlign: center\">").append(subtask.getName()).append("</div>")
+                            .append("<button type=\"button\" class=\"btn btn-success col-md-3\" onclick=\"(function() { document.getElementById('")
+                            .append(subtask.getSequence()).append("').style.textDecoration = 'line-through'; })()\">Done</button>")
+                            .append("</div>")
+                            .append("</div>")
+                            .append("</div>");
                 }
             }
 
@@ -82,6 +99,7 @@ public class TaskDetails extends HttpServlet {
                     "        <h1>Labels</h1>\n" +
                     "        <h1>Category</h1>\n" +
                     "        <h1>Subtasks</h1>\n" +
+                    subtasks +
                     "        <h1>Chat</h1>\n" +
                     chatMessages +
                     "            <form action=\"/tasks_1-Servlets/createChatMessage?taskId=" + taskId + "\" method=\"post\">\n" +
