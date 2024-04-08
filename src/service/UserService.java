@@ -90,4 +90,8 @@ public class UserService {
     public List<AdminPanelUserDto> getUsersForAdminPanel() {
         return userDao.findAllForAdminPanel();
     }
+
+    public boolean removeUser(String userId) {
+        return userDao.removeById(Long.parseLong(userId));
+    }
 }

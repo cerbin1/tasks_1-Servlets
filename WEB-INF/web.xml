@@ -135,6 +135,10 @@
         <servlet-name>AdminPanelServlet</servlet-name>
         <url-pattern>/adminPanel</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AdminPanelServlet</servlet-name>
+        <url-pattern>/removeUser</url-pattern>
+    </servlet-mapping>
     <!-- SERVLET-MAPPINGS-END -->
 
 

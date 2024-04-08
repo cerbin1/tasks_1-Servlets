@@ -1,3 +1,4 @@
+import service.AdminPanelUserDto;
 import service.NotificationDto;
 import service.TaskDto;
 
@@ -136,4 +137,45 @@ public interface UiUtils {
                 "      </tbody>\n" +
                 "    </table>";
     }
+
+    static String adminPanelUserListListToHtmlTable(List<AdminPanelUserDto> usersData) {
+        StringBuilder users = new StringBuilder();
+        for (AdminPanelUserDto user : usersData) {
+            users.append("<tr>")
+                    .append("<th scope=\"row\">").append(user.getId()).append("</th>")
+                    .append("<td>").append(user.getEmail()).append("</td>")
+                    .append("<td>").append(user.getUsername()).append("</td>")
+                    .append("<td>").append(user.getName()).append("</td>")
+                    .append("<td>").append(user.getSurname()).append("</td>")
+                    .append("<td>").append(user.getActive() ? "Yes" : "No").append("</td>")
+                    .append("<td>").append(user.getMessageCount()).append("</td>")
+                    .append("<td>")
+                    .append("<form action=\"/tasks_1-Servlets/removeUser?userId=").append(user.getId()).append("\" method=\"post\">")
+
+                    .append("<button class=\"btn btn-danger\" type=\"submit\">Remove</button>")
+                    .append("</form>")
+                    .append("</td>")
+                    .append("</tr>");
+        }
+        return usersData.isEmpty() ? "<span>No results</span>" : (
+                "    <table class=\"table\">" +
+                        "      <thead>" +
+                        "        <tr>" +
+                        "          <th scope=\"col\">#</th>" +
+                        "          <th scope=\"col\">Email</th>" +
+                        "          <th scope=\"col\">Login</th>" +
+                        "          <th scope=\"col\">Name</th>" +
+                        "          <th scope=\"col\">Surname</th>" +
+                        "          <th scope=\"col\">Is active</th>" +
+                        "          <th scope=\"col\">Messages count</th>" +
+                        "          <th scope=\"col\">Remove</th>" +
+                        "        </tr>" +
+                        "      </thead>" +
+                        "      <tbody>" +
+                        users +
+                        "      </tbody>" +
+                        "    </table>"
+        );
+    }
+
 }

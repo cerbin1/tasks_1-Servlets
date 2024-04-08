@@ -32,7 +32,11 @@ public class AuthenticationService {
         return jsessionidCookie.orElseThrow().getValue();
     }
 
-    public boolean isAdmin(HttpServletRequest request) {
+    public boolean authenticateAdmin(HttpServletRequest request) {
+        return authenticate(request) && isAdmin(request);
+    }
+
+    private boolean isAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session == null) {
             return false;
