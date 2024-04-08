@@ -58,6 +58,21 @@ public class CreateTask extends HttpServlet {
                     "    <title>Create task</title>\n" +
                     "    <link rel=\"stylesheet\" href=\"bootstrap.min.css\">\n" +
                     "</head>\n" +
+                    "            <script>\n" +
+                    "                    document.addEventListener('DOMContentLoaded', function() {\n" +
+                    "                    var addSubtaskButton = document.getElementById('addSubtask');\n" +
+                    "                    addSubtaskButton.addEventListener('click', function() {\n" +
+                    "                    var input = document.createElement('input');\n" +
+                    "                    input.type = 'text';\n" +
+                    "                    input.classList.add('form-control');\n" +
+                    "                    input.style.textAlign = 'center';\n" +
+                    "                    input.name = 'subtasks[]';\n" +
+                    "                    input.placeholder = 'Subtask name';\n" +
+                    "                    var subtasksContainer = document.getElementById('subtasks');\n" +
+                    "                    subtasksContainer.appendChild(input);\n" +
+                    "                });\n" +
+                    "               });\n" +
+                    "            </script>" +
                     "<body>\n" +
                     UiUtils.navbarHtml() +
                     "<div class='container'>\n" +
@@ -96,11 +111,17 @@ public class CreateTask extends HttpServlet {
                     "        <h1>Labels</h1>\n" +
                     "        <h1>Category</h1>\n" +
                     "        <h1>Subtasks</h1>\n" +
+                    "        <div class=\"d-flex align-items-center justify-content-center\">" +
+                    "         <div id=\"subtasks\" class=\"form-group col-md-3\">" +
+                    "         </div>\n" +
+                    "        </div>\n" +
+                    "        <button id=\"addSubtask\" type=\"button\" class=\"btn btn-success\">Add subtask</button>" +
+
                     "        <h1>Files upload</h1>\n" +
                     "\n" +
                     "        <div class=\"form-group row\">\n" +
                     "            <div class='form-control'>\n" +
-                    "                <button type=\"button\" class=\"btn btn-secondary\" onClick={handleCancelButton}>Cancel</button>\n" +
+//                    "                <button type=\"button\" class=\"btn btn-secondary\" onClick={handleCancelButton}>Cancel</button>\n" +
                     "                <button type=\"submit\" class=\"btn btn-primary\">Create Task</button>\n" +
                     "            </div>\n" +
                     "        </div>\n" +
@@ -118,10 +139,12 @@ public class CreateTask extends HttpServlet {
         if (authenticationService.authenticate(request)) {
             String name = request.getParameter("name");
             String deadline = request.getParameter("deadline");
-            String userId = request.getParameter("user");
+            String creatorId = request.getParameter("user");
             String priorityId = request.getParameter("priority");
+            String[] subtasks = request.getParameterValues("subtasks[]");
             PrintWriter writer = response.getWriter();
-            Long taskId = taskService.create(name, deadline, userId, priorityId, (String) request.getSession(false).getAttribute("userId"));
+            String userId = (String) request.getSession(false).getAttribute("userId");
+            Long taskId = taskService.create(name, deadline, userId, priorityId, creatorId, subtasks);
             if (taskId == null) {
                 writer.print("<html lang=\"en\">\n" +
                         "<head>\n" +
@@ -138,7 +161,7 @@ public class CreateTask extends HttpServlet {
                         "</body>\n" +
                         "</html>");
             } else {
-                notificationService.createNotification("New Task", taskId, userId);
+                notificationService.createNotification("New Task", taskId, creatorId);
                 taskReminderService.createTaskReminder(taskId, LocalDateTime.parse(deadline).minusHours(1));
                 response.sendRedirect(APP_BASE_PATH + "/tasks");
             }
