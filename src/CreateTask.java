@@ -6,6 +6,7 @@ import service.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static conf.ApplicationProperties.APP_BASE_PATH;
@@ -16,6 +17,7 @@ public class CreateTask extends HttpServlet {
     private final AuthenticationService authenticationService;
     private final TaskService taskService;
     private final NotificationService notificationService;
+    private final TaskReminderService taskReminderService;
 
     public CreateTask() {
         this.taskService = new TaskService(new TaskDao());
@@ -23,6 +25,7 @@ public class CreateTask extends HttpServlet {
         this.userService = new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService());
         this.authenticationService = new AuthenticationService(userService);
         this.notificationService = new NotificationService(new NotificationDao());
+        this.taskReminderService = new TaskReminderService(new TaskReminderDao());
     }
 
     @Override
@@ -136,6 +139,7 @@ public class CreateTask extends HttpServlet {
                         "</html>");
             } else {
                 notificationService.createNotification("New Task", taskId, userId);
+                taskReminderService.createTaskReminder(taskId, LocalDateTime.parse(deadline).minusHours(1));
                 response.sendRedirect(APP_BASE_PATH + "/tasks");
             }
         } else {
