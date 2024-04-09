@@ -8,6 +8,7 @@ import service.AuthenticationService;
 import service.EmailSendingService;
 import service.NotificationService;
 import service.UserService;
+import utils.UiUtils;
 
 import java.io.IOException;
 import java.io.PrintWriter;

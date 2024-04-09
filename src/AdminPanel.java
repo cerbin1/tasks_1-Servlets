@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import service.AuthenticationService;
 import service.EmailSendingService;
 import service.UserService;
+import utils.UiUtils;
 
 import java.io.IOException;
 import java.io.PrintWriter;

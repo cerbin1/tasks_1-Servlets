@@ -1,3 +1,5 @@
+package utils;
+
 import service.dto.AdminPanelUserDto;
 import service.dto.NotificationDto;
 import service.dto.TaskDto;
