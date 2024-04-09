@@ -1,8 +1,8 @@
 package db.dao;
 
 import db.DbConnection;
-import service.AdminPanelUserDto;
-import service.UserDto;
+import service.dto.AdminPanelUserDto;
+import service.dto.UserDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

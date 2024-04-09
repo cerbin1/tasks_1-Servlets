@@ -1,8 +1,8 @@
 package db.dao;
 
 import db.DbConnection;
-import service.EditTaskDto;
-import service.TaskDto;
+import service.dto.EditTaskDto;
+import service.dto.TaskDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -1,7 +1,7 @@
 package db.dao;
 
 import db.DbConnection;
-import service.ChatMessageDto;
+import service.dto.ChatMessageDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

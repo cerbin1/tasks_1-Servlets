@@ -1,7 +1,7 @@
 package db.dao;
 
 import db.DbConnection;
-import service.SubtaskDto;
+import service.dto.SubtaskDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

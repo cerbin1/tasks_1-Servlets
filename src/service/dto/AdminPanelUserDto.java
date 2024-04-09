@@ -1,4 +1,4 @@
-package service;
+package service.dto;
 
 public class AdminPanelUserDto {
     private final Long id;

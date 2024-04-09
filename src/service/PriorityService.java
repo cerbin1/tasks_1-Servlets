@@ -1,6 +1,7 @@
 package service;
 
 import db.dao.PriorityDao;
+import service.dto.PriorityDto;
 
 import java.util.List;
 

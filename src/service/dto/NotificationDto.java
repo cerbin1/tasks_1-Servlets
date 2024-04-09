@@ -1,4 +1,4 @@
-package service;
+package service.dto;
 
 public class NotificationDto {
     private final Long id;

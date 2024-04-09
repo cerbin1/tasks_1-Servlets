@@ -2,6 +2,8 @@ package service;
 
 import db.dao.UserActivationLinkDao;
 import db.dao.UserDao;
+import service.dto.AdminPanelUserDto;
+import service.dto.UserDto;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

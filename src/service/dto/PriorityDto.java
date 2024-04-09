@@ -1,4 +1,4 @@
-package service;
+package service.dto;
 
 public class PriorityDto {
     private final Long id;

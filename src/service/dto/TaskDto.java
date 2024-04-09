@@ -1,4 +1,4 @@
-package service;
+package service.dto;
 
 import java.time.LocalDateTime;
 

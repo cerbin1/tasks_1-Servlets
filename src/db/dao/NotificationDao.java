@@ -1,7 +1,7 @@
 package db.dao;
 
 import db.DbConnection;
-import service.NotificationDto;
+import service.dto.NotificationDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

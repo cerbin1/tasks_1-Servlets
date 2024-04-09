@@ -1,6 +1,6 @@
-import service.AdminPanelUserDto;
-import service.NotificationDto;
-import service.TaskDto;
+import service.dto.AdminPanelUserDto;
+import service.dto.NotificationDto;
+import service.dto.TaskDto;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package service;
+package service.dto;
 
 public class ChatMessageDto {
     private final String senderName;

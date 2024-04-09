@@ -1,4 +1,4 @@
-package service;
+package service.dto;
 
 public class SubtaskDto {
     private final Long id;

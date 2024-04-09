@@ -1,6 +1,7 @@
 package service;
 
 import db.dao.ChatMessageDao;
+import service.dto.ChatMessageDto;
 
 import java.util.List;
 

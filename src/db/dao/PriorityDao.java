@@ -1,7 +1,7 @@
 package db.dao;
 
 import db.DbConnection;
-import service.PriorityDto;
+import service.dto.PriorityDto;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

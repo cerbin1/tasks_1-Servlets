@@ -1,6 +1,7 @@
 package service;
 
 import db.dao.NotificationDao;
+import service.dto.NotificationDto;
 
 import java.util.List;
 
