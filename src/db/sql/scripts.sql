@@ -101,3 +101,12 @@ CREATE TABLE IF NOT EXISTS subtask (
 );
 ALTER TABLE subtask DROP CONSTRAINT IF EXISTS fksvs126nsj9ohhvwjog5ddp76x;
 ALTER TABLE subtask ADD CONSTRAINT fksvs126nsj9ohhvwjog5ddp76x FOREIGN KEY (task_id) REFERENCES task(id);
+
+CREATE TABLE task_file (
+	"name" varchar(255) NOT NULL,
+	"type" varchar(255) NOT NULL,
+	task_id int8 NOT NULL,
+	CONSTRAINT task_file_pkey PRIMARY KEY ("name")
+);
+ALTER TABLE task_file DROP CONSTRAINT IF EXISTS fkgr48xj5f1r0t32jwf648vuoay;
+ALTER TABLE task_file ADD CONSTRAINT fkgr48xj5f1r0t32jwf648vuoay FOREIGN KEY (task_id) REFERENCES task(id);

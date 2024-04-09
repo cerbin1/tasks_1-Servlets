@@ -1,18 +1,24 @@
 import db.dao.*;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import service.*;
 import service.dto.PriorityDto;
 import service.dto.UserDto;
 import utils.UiUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static conf.ApplicationProperties.APP_BASE_PATH;
+import static conf.ApplicationProperties.FILE_UPLOADS_BASE_URL;
 
 public class CreateTask extends HttpServlet {
     private final UserService userService;
@@ -23,7 +29,7 @@ public class CreateTask extends HttpServlet {
     private final TaskReminderService taskReminderService;
 
     public CreateTask() {
-        this.taskService = new TaskService(new TaskDao());
+        this.taskService = new TaskService(new TaskDao(), new SubtaskDao(), new TaskFileDao());
         this.priorityService = new PriorityService(new PriorityDao());
         this.userService = new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService());
         this.authenticationService = new AuthenticationService(userService);
@@ -79,7 +85,7 @@ public class CreateTask extends HttpServlet {
                     "<body>\n" +
                     UiUtils.navbarHtml() +
                     "<div class='container'>\n" +
-                    "    <form action=\"/tasks_1-Servlets/createTask\" method=\"post\">\n" +
+                    "    <form action=\"/tasks_1-Servlets/createTask\" method=\"post\" enctype=\"multipart/form-data\" >\n" +
                     "        <div class=\"form-group row\">\n" +
                     "            <label for=\"name\" class=\"col-sm-2 col-form-label\">Name</label>\n" +
                     "            <div class=\"col-sm-10\">\n" +
@@ -121,6 +127,7 @@ public class CreateTask extends HttpServlet {
                     "        <button id=\"addSubtask\" type=\"button\" class=\"btn btn-success\">Add subtask</button>" +
 
                     "        <h1>Files upload</h1>\n" +
+                    "        <input type=\"file\" multiple name=\"files\"/>" +
                     "\n" +
                     "        <div class=\"form-group row\">\n" +
                     "            <div class='form-control'>\n" +
@@ -137,7 +144,7 @@ public class CreateTask extends HttpServlet {
     }
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         if (authenticationService.authenticate(request)) {
             String name = request.getParameter("name");
             String deadline = request.getParameter("deadline");
@@ -165,6 +172,7 @@ public class CreateTask extends HttpServlet {
             } else {
                 notificationService.createNotification("New Task", taskId, creatorId);
                 taskReminderService.createTaskReminder(taskId, LocalDateTime.parse(deadline).minusHours(1));
+                uploadFiles(request, taskId);
                 response.sendRedirect(APP_BASE_PATH + "/tasks");
             }
         } else {
@@ -172,4 +180,16 @@ public class CreateTask extends HttpServlet {
         }
     }
 
+    private void uploadFiles(HttpServletRequest request, Long taskId) throws IOException, ServletException {
+        Collection<Part> parts = request
+                .getParts().stream()
+                .filter(part -> part.getName().equals("files") && !part.getSubmittedFileName().isBlank())
+                .collect(Collectors.toList());
+        for (Part file : parts) {
+            String fileName = file.getSubmittedFileName();
+            String realPath = getServletContext().getRealPath(FILE_UPLOADS_BASE_URL);
+            taskService.saveTaskFileInfo(fileName, file.getContentType(), taskId);
+            file.write(realPath + File.separator + fileName);
+        }
+    }
 }

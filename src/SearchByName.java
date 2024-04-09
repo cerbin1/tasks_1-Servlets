@@ -1,6 +1,4 @@
-import db.dao.TaskDao;
-import db.dao.UserActivationLinkDao;
-import db.dao.UserDao;
+import db.dao.*;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,7 +17,7 @@ public class SearchByName extends HttpServlet {
     private final AuthenticationService authenticationService;
 
     public SearchByName() {
-        this.taskService = new TaskService(new TaskDao());
+        this.taskService = new TaskService(new TaskDao(), new SubtaskDao(), new TaskFileDao());
         this.authenticationService = new AuthenticationService(new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService()));
     }
 

@@ -23,7 +23,7 @@ public class EditTask extends HttpServlet {
     private final SubtaskService subtaskService;
 
     public EditTask() {
-        this.taskService = new TaskService(new TaskDao());
+        this.taskService = new TaskService(new TaskDao(), new SubtaskDao(), new TaskFileDao());
         this.priorityService = new PriorityService(new PriorityDao());
         this.userService = new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService());
         this.authenticationService = new AuthenticationService(userService);
