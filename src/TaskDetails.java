@@ -113,6 +113,11 @@ public class TaskDetails extends HttpServlet {
                     "        <h1>Files</h1>\n" +
                     "        <h1>Worklogs</h1>\n" +
                     "    </div>\n" +
+                    "        <div class=\"form-group row\">\n" +
+                    "            <div class='form-control'>\n" +
+                    "                <a href=\"/tasks_1-Servlets/myTasks\" class=\"btn btn-secondary\">Back</a>\n" +
+                    "            </div>\n" +
+                    "        </div>\n" +
                     "</div>" +
                     "</body>\n" +
                     "</html>");
