@@ -12,7 +12,9 @@ import java.util.List;
 
 public class SubtaskDao {
     private static final String SQL_CREATE_SUBTASK = "INSERT INTO subtask (task_id, name, sequence) VALUES (?, ?, ?)";
-    private static final String SQL_GET_ALL_SUBTASKS_BY_TASK_ID = "SELECT name, sequence FROM subtask WHERE task_id = ? ORDER BY sequence";
+    private static final String SQL_GET_ALL_SUBTASKS_BY_TASK_ID = "SELECT id, name, sequence FROM subtask WHERE task_id = ? ORDER BY sequence";
+    private static final String SQL_DELETE_SUBTASK = "DELETE FROM subtask WHERE id = ?";
+    private static final String SQL_UPDATE_SUBTASK = "UPDATE subtask SET name = ? WHERE id = ?";
 
     public void createSubtasks(Long taskId, String[] subtaskNames) {
         for (int i = 0; i < subtaskNames.length; i++) {
@@ -38,7 +40,7 @@ public class SubtaskDao {
                 ResultSet resultSet = preparedStatement.executeQuery();
                 List<SubtaskDto> subtasks = new ArrayList<>();
                 while (resultSet.next()) {
-                    subtasks.add(new SubtaskDto(resultSet.getString("name"), resultSet.getLong("sequence")));
+                    subtasks.add(new SubtaskDto(resultSet.getLong("id"), resultSet.getString("name"), resultSet.getLong("sequence")));
                 }
                 return subtasks;
             } catch (SQLException e) {
@@ -46,6 +48,36 @@ public class SubtaskDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void remove(Long subtaskId) {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_SUBTASK)) {
+                preparedStatement.setLong(1, subtaskId);
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public void updateSubtasks(String[] subtasksNames, String[] subtasksIds) {
+        for (int i = 0; i < subtasksIds.length; i++) {
+            DbConnection dbConnection = new DbConnection();
+            Connection connection = dbConnection.createConnection();
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_SUBTASK)) {
+                preparedStatement.setString(1, subtasksNames[i]);
+                preparedStatement.setLong(2, Long.parseLong(subtasksIds[i]));
+                preparedStatement.executeUpdate();
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

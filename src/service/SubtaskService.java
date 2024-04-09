@@ -14,4 +14,8 @@ public class SubtaskService {
     public List<SubtaskDto> getTaskSubtasks(String taskId) {
         return subtaskDao.findAllByTaskId(Long.parseLong(taskId));
     }
+
+    public void removeSubtask(String subtaskId) {
+        subtaskDao.remove(Long.parseLong(subtaskId));
+    }
 }

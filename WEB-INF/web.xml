@@ -71,6 +71,10 @@
         <servlet-name>CreateChatMessageServlet</servlet-name>
         <servlet-class>CreateChatMessage</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RemoveSubtaskServlet</servlet-name>
+        <servlet-class>RemoveSubtask</servlet-class>
+    </servlet>
     <!-- SERVLET-DEFINITIONS-END -->
 
 
@@ -146,6 +150,10 @@
     <servlet-mapping>
         <servlet-name>CreateChatMessageServlet</servlet-name>
         <url-pattern>/createChatMessage</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveSubtaskServlet</servlet-name>
+        <url-pattern>/removeSubtask</url-pattern>
     </servlet-mapping>
     <!-- SERVLET-MAPPINGS-END -->
 

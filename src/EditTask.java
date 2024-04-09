@@ -1,7 +1,4 @@
-import db.dao.PriorityDao;
-import db.dao.TaskDao;
-import db.dao.UserActivationLinkDao;
-import db.dao.UserDao;
+import db.dao.*;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,12 +15,14 @@ public class EditTask extends HttpServlet {
     private final PriorityService priorityService;
     private final AuthenticationService authenticationService;
     private final TaskService taskService;
+    private final SubtaskService subtaskService;
 
     public EditTask() {
         this.taskService = new TaskService(new TaskDao());
         this.priorityService = new PriorityService(new PriorityDao());
         this.userService = new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService());
         this.authenticationService = new AuthenticationService(userService);
+        this.subtaskService = new SubtaskService(new SubtaskDao());
     }
 
     @Override
@@ -60,11 +59,44 @@ public class EditTask extends HttpServlet {
                         .append("</option>\n");
             }
 
+            List<SubtaskDto> subtasksData = subtaskService.getTaskSubtasks(taskId);
+
+            StringBuilder subtasks = new StringBuilder();
+            subtasks.append("<div class=\"d-flex align-items-center justify-content-center\">")
+                    .append("<div id=\"subtasks\" class=\"form-group col-md-3\">");
+            for (SubtaskDto subtask : subtasksData) {
+                subtasks
+                        .append("<div class=\"input-group\">")
+                        .append("<input class=\"form-control col-md-9\" style=\"text-align: center;\" name=\"subtasksNames[]\" value=\"").append(subtask.getName()).append("\" />")
+                        .append("<input type=\"hidden\" name=\"subtasksIds[]\" value=\"").append(subtask.getId()).append("\" />")
+                        .append("<a href=\"/tasks_1-Servlets/removeSubtask?")
+                        .append("taskId=").append(taskId).append("&subtaskId=").append(subtask.getId())
+                        .append("\" type=\"submit\" class=\"btn btn-danger col-md-3\">Remove</a>")
+                        .append("</div>");
+            }
+            subtasks.append("</div>").append("</div>");
+
             writer.print("<html lang=\"en\">\n" +
                     "<head>\n" +
                     "    <title>Create task</title>\n" +
                     "    <link rel=\"stylesheet\" href=\"bootstrap.min.css\">\n" +
                     "</head>\n" +
+                    "            <script>\n" +
+                    "                    document.addEventListener('DOMContentLoaded', function() {\n" +
+                    "                    var addSubtaskButton = document.getElementById('addSubtask');\n" +
+                    "                    addSubtaskButton.addEventListener('click', function() {\n" +
+                    "                    var newSubtask = document.createElement('input');\n" +
+                    "                    newSubtask.type = 'text';\n" +
+                    "                    newSubtask.classList.add('form-control');\n" +
+                    "                    newSubtask.style.textAlign = 'center';\n" +
+                    "                    newSubtask.name = 'newSubtasks[]';\n" +
+                    "                    newSubtask.placeholder = 'Subtask name';\n" +
+
+                    "                    var subtasksContainer = document.getElementById('subtasks');\n" +
+                    "                    subtasksContainer.appendChild(newSubtask);\n" +
+                    "                });\n" +
+                    "               });\n" +
+                    "            </script>" +
                     "<body>\n" +
                     UiUtils.navbarHtml() +
                     "<div class='container'>\n" +
@@ -106,6 +138,8 @@ public class EditTask extends HttpServlet {
                     "        <h1>Labels</h1>\n" +
                     "        <h1>Category</h1>\n" +
                     "        <h1>Subtasks</h1>\n" +
+                    subtasks +
+                    "        <button id=\"addSubtask\" type=\"button\" class=\"btn btn-success\">Add subtask</button>" +
                     "        <h1>Files upload</h1>\n" +
                     "\n" +
                     "        <div class=\"form-group row\">\n" +
@@ -126,12 +160,16 @@ public class EditTask extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (authenticationService.authenticate(request)) {
+            String taskId = request.getParameter("taskId");
             String name = request.getParameter("name");
             String deadline = request.getParameter("deadline");
             String userId = request.getParameter("user");
             String priorityId = request.getParameter("priority");
+            String[] subtasksNames = request.getParameterValues("subtasksNames[]");
+            String[] subtasksIds = request.getParameterValues("subtasksIds[]");
+            String[] newSubtasks = request.getParameterValues("newSubtasks[]");
             PrintWriter writer = response.getWriter();
-            if (taskService.updateTask(request.getParameter("taskId"), name, deadline, userId, priorityId)) {
+            if (taskService.updateTaskAndSubtasks(taskId, name, deadline, userId, priorityId, subtasksNames, subtasksIds, newSubtasks)) {
                 response.sendRedirect(APP_BASE_PATH + "/tasks");
             } else {
                 writer.print("<html lang=\"en\">\n" +
