@@ -149,7 +149,7 @@ public class EditTask extends HttpServlet {
                     "\n" +
                     "        <div class=\"form-group row\">\n" +
                     "            <div class='form-control'>\n" +
-                    "                <button type=\"button\" class=\"btn btn-secondary\">Cancel</button>\n" +
+                    "                <a href=\"/tasks_1-Servlets/tasks\" class=\"btn btn-secondary\">Cancel</a>\n" +
                     "                <button type=\"submit\" class=\"btn btn-primary\">Update</button>\n" +
                     "            </div>\n" +
                     "        </div>\n" +
