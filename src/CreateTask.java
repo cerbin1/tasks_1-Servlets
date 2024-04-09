@@ -124,7 +124,6 @@ public class CreateTask extends HttpServlet {
                     "\n" +
                     "        <div class=\"form-group row\">\n" +
                     "            <div class='form-control'>\n" +
-//                    "                <button type=\"button\" class=\"btn btn-secondary\" onClick={handleCancelButton}>Cancel</button>\n" +
                     "                <button type=\"submit\" class=\"btn btn-primary\">Create Task</button>\n" +
                     "            </div>\n" +
                     "        </div>\n" +
