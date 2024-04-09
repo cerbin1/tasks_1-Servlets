@@ -19,7 +19,9 @@ public class TaskService {
 
     public Long create(String name, String deadline, String userId, String priorityId, String creatorId, String[] subtasks) {
         Long taskId = taskDao.createTask(name, LocalDateTime.parse(deadline), Long.parseLong(userId), Long.parseLong(priorityId), Long.parseLong(creatorId));
-        subtaskDao.createSubtasks(taskId, subtasks);
+        if (subtasks != null) {
+            subtaskDao.createSubtasks(taskId, subtasks);
+        }
         return taskId;
     }
 
