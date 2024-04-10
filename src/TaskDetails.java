@@ -3,10 +3,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.*;
-import service.dto.ChatMessageDto;
-import service.dto.SubtaskDto;
-import service.dto.TaskDto;
-import service.dto.TaskFileDto;
+import service.dto.*;
 import utils.UiUtils;
 
 import java.io.IOException;
@@ -20,6 +17,7 @@ public class TaskDetails extends HttpServlet {
     private final ChatMessageService chatMessageService;
     private final SubtaskService subtaskService;
     private final TaskFileDao taskFileDao;
+    private final LabelService labelService;
 
     public TaskDetails() {
         this.taskFileDao = new TaskFileDao();
@@ -27,6 +25,7 @@ public class TaskDetails extends HttpServlet {
         this.authenticationService = new AuthenticationService(new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService()));
         this.chatMessageService = new ChatMessageService(new ChatMessageDao());
         this.subtaskService = new SubtaskService(new SubtaskDao());
+        this.labelService = new LabelService(new LabelDao());
     }
 
     @Override
@@ -36,6 +35,22 @@ public class TaskDetails extends HttpServlet {
             TaskDto task = taskService.getTask(taskId);
             String userId = (String) request.getSession().getAttribute("userId");
             PrintWriter writer = response.getWriter();
+
+            List<LabelDto> labelsData = labelService.getTaskLabels(taskId);
+            StringBuilder labels = new StringBuilder();
+            if (labelsData.isEmpty()) {
+                labels.append("<p>No labels added.</p>");
+            } else {
+                for (LabelDto label : labelsData) {
+                    labels.append("<div class=\"d-flex align-items-center justify-content-center\">")
+                            .append("<div class=\"input-group mb-1\">")
+                            .append("<span class=\"form-control\">")
+                            .append(label.getName())
+                            .append("</span>")
+                            .append("</div>")
+                            .append("</div>");
+                }
+            }
 
             List<ChatMessageDto> taskChatMessages = chatMessageService.getTaskChatMessages(taskId);
             StringBuilder chatMessages = new StringBuilder();
@@ -119,6 +134,7 @@ public class TaskDetails extends HttpServlet {
                     "        </div>\n" +
                     "\n" +
                     "        <h1>Labels</h1>\n" +
+                    labels +
                     "        <h1>Category</h1>\n" +
                     "        <div class=\"row\">\n" +
                     "          <label class=\"col-sm-4 col-form-label fw-bold\">Category</label>\n" +
