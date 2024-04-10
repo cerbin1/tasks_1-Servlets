@@ -1,3 +1,4 @@
+import db.TaskCategory;
 import db.dao.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -61,7 +62,7 @@ public class CreateTask extends HttpServlet {
                         .append(priorityDto.getValue())
                         .append("</option>\n");
             }
-            List<String> categoriesData = taskService.getAllTaskCategories();
+            List<String> categoriesData = TaskCategory.listOfValues();
             StringBuilder categories = new StringBuilder();
             categoriesData.forEach(category -> categories.append("<option value=\"").append(category).append("\">").append(category).append("</option>\n"));
 

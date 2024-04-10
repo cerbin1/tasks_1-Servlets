@@ -1,6 +1,5 @@
 package service;
 
-import db.TaskCategory;
 import db.dao.SubtaskDao;
 import db.dao.TaskDao;
 import db.dao.TaskFileDao;
@@ -8,9 +7,7 @@ import service.dto.EditTaskDto;
 import service.dto.TaskDto;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TaskService {
     private final TaskDao taskDao;
@@ -86,7 +83,7 @@ public class TaskService {
         }
     }
 
-    public List<String> getAllTaskCategories() {
-        return Arrays.stream(TaskCategory.values()).map(TaskCategory::name).collect(Collectors.toList());
+    public List<TaskDto> getTasksByCategory(String category) {
+        return taskDao.findAllByCategory(category);
     }
 }

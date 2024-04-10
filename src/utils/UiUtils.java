@@ -1,5 +1,6 @@
 package utils;
 
+import db.TaskCategory;
 import service.dto.AdminPanelUserDto;
 import service.dto.NotificationDto;
 import service.dto.TaskDto;
@@ -66,6 +67,10 @@ public interface UiUtils {
                         .append("</tr>\n");
             }
         }
+
+        StringBuilder categories = new StringBuilder();
+        TaskCategory.listOfValues().forEach(category -> categories.append("<option value=\"").append(category).append("\">").append(category).append("</option>\n"));
+
         return
                 "<table class=\"table\">" +
                         "<thead>" +
@@ -90,7 +95,19 @@ public interface UiUtils {
                         "<form action=\"/tasks_1-Servlets/searchByName\" method=\"get\">\n" +
                         "<input type=\"text\" class=\"form-control\" name=\"name\" />\n" +
                         "<button type=\"submit\" class=\"btn btn-primary\">Search by name</button>\n" +
-                        "</div>";
+                        "</form>" +
+                        "</div>" +
+
+                        "<div class=\"form-group row\">\n" +
+                        "<form action=\"/tasks_1-Servlets/searchByCategory\" method=\"get\">\n" +
+                        "<div class=\"d-flex align-items-center justify-content-center\">\n" +
+                        "<div class=\"form-group col-md-3\">\n" +
+                        "<select class=\"form-select\" name=\"category\">\n" +
+                        categories +
+                        "</select>\n" +
+                        "<button type=\"submit\" class=\"btn btn-primary\">Search by category</button>" +
+                        "</form>" +
+                        "</div>\n";
     }
 
     static String notificationListToHtmlTable(List<NotificationDto> notificationsData) {
