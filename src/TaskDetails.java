@@ -89,7 +89,7 @@ public class TaskDetails extends HttpServlet {
             List<SubtaskDto> subtasksData = subtaskService.getTaskSubtasks(taskId);
             StringBuilder subtasks = new StringBuilder();
             if (subtasksData.isEmpty()) {
-                chatMessages.append("<p>No subtasks yet.</p>");
+                subtasks.append("<p>No subtasks yet.</p>");
             } else {
                 for (SubtaskDto subtask : subtasksData) {
                     subtasks.append("<div class=\"d-flex align-items-center justify-content-center\">")
