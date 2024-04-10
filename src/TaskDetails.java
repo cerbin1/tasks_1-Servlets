@@ -122,7 +122,7 @@ public class TaskDetails extends HttpServlet {
                     "        <h1>Category</h1>\n" +
                     "        <div class=\"row\">\n" +
                     "          <label class=\"col-sm-4 col-form-label fw-bold\">Category</label>\n" +
-                    "          <p class=\"col-sm-8\">" + task.getCategory()+"</p>\n" +
+                    "          <p class=\"col-sm-8\">" + task.getCategory() + "</p>\n" +
                     "        </div>" +
                     "        <h1>Subtasks</h1>\n" +
                     subtasks +

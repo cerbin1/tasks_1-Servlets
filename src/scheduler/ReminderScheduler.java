@@ -2,8 +2,8 @@ package scheduler;
 
 import db.dao.TaskReminderDao;
 import service.EmailSendingService;
-import service.dto.TaskReminderDto;
 import service.TaskReminderService;
+import service.dto.TaskReminderDto;
 
 import java.util.List;
 
