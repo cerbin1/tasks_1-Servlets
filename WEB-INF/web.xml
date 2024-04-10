@@ -90,6 +90,10 @@
         <servlet-class>RemoveSubtask</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>RemoveLabelServlet</servlet-name>
+        <servlet-class>RemoveLabel</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>DownloadFileServlet</servlet-name>
         <servlet-class>DownloadFile</servlet-class>
     </servlet>
@@ -180,6 +184,10 @@
     <servlet-mapping>
         <servlet-name>RemoveSubtaskServlet</servlet-name>
         <url-pattern>/removeSubtask</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveLabelServlet</servlet-name>
+        <url-pattern>/removeLabel</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>DownloadFileServlet</servlet-name>

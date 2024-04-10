@@ -26,6 +26,7 @@ public class EditTask extends HttpServlet {
     private final TaskService taskService;
     private final SubtaskService subtaskService;
     private final TaskFileDao taskFileDao;
+    private final LabelService labelService;
 
     public EditTask() {
         this.taskFileDao = new TaskFileDao();
@@ -34,6 +35,7 @@ public class EditTask extends HttpServlet {
         this.userService = new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService());
         this.authenticationService = new AuthenticationService(userService);
         this.subtaskService = new SubtaskService(new SubtaskDao());
+        this.labelService = new LabelService(new LabelDao());
     }
 
     @Override
@@ -70,8 +72,23 @@ public class EditTask extends HttpServlet {
                         .append("</option>\n");
             }
 
-            List<SubtaskDto> subtasksData = subtaskService.getTaskSubtasks(taskId);
+            List<LabelDto> labelsData = labelService.getTaskLabels(taskId);
+            StringBuilder labels = new StringBuilder();
+            labels.append("<div class=\"d-flex align-items-center justify-content-center\">")
+                    .append("<div id=\"labels\" class=\"form-group col-md-3\">");
+            for (LabelDto label : labelsData) {
+                labels
+                        .append("<div class=\"input-group\">")
+                        .append("<input class=\"form-control col-md-9\" style=\"text-align: center;\" name=\"labels[]\" value=\"").append(label.getName()).append("\" />")
+                        .append("<input type=\"hidden\" name=\"labelIds[]\" value=\"").append(label.getId()).append("\" />")
+                        .append("<a href=\"/tasks_1-Servlets/removeLabel?")
+                        .append("taskId=").append(taskId).append("&labelId=").append(label.getId())
+                        .append("\" type=\"submit\" class=\"btn btn-danger col-md-3\">Remove</a>")
+                        .append("</div>");
+            }
+            labels.append("</div>").append("</div>");
 
+            List<SubtaskDto> subtasksData = subtaskService.getTaskSubtasks(taskId);
             StringBuilder subtasks = new StringBuilder();
             subtasks.append("<div class=\"d-flex align-items-center justify-content-center\">")
                     .append("<div id=\"subtasks\" class=\"form-group col-md-3\">");
@@ -182,7 +199,18 @@ public class EditTask extends HttpServlet {
                     "            </div>\n" +
                     "        </div>\n" +
                     "\n" +
-                    "        <h1>Labels</h1>\n" +
+                    "        <h1>Labels</h1>" +
+                    labels +
+                    "<button type=\"button\" class=\"btn btn-success\" onclick=\"(function() { " +
+                    "const labels = document.getElementById('labels');" +
+                    "const input = document.createElement('input');" +
+                    "input.classList.add('form-control');\n" +
+                    "input.style.textAlign = 'center';\n" +
+                    "input.name = 'newLabels[]';" +
+                    "input.placeholder = 'Label name';" +
+                    "labels.appendChild(input);" +
+                    "})()\">Add label</button>" +
+
                     "        <h1>Category</h1>\n" +
                     "        <div class=\"d-flex align-items-center justify-content-center\">\n" +
                     "          <div class=\"form-group col-md-3\">\n" +
@@ -225,9 +253,13 @@ public class EditTask extends HttpServlet {
             String[] subtasksNames = request.getParameterValues("subtasksNames[]");
             String[] subtasksIds = request.getParameterValues("subtasksIds[]");
             String[] newSubtasks = request.getParameterValues("newSubtasks[]");
+            String[] labels = request.getParameterValues("labels[]");
+            String[] labelIds = request.getParameterValues("labelIds[]");
+            String[] newLabels = request.getParameterValues("newLabels[]");
             String category = request.getParameter("category");
             PrintWriter writer = response.getWriter();
             if (taskService.updateTaskAndSubtasks(taskId, name, deadline, userId, priorityId, subtasksNames, subtasksIds, newSubtasks, category)) {
+                labelService.updateTaskLabels(taskId, labels, labelIds, newLabels);
                 uploadNewFiles(request, taskId);
                 response.sendRedirect(APP_BASE_PATH + "/tasks");
             } else {
