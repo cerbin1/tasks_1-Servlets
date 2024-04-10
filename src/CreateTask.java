@@ -122,8 +122,6 @@ public class CreateTask extends HttpServlet {
                     "        </div>\n" +
 
                     "        <h1>Labels</h1>" +
-                    "         </div>\n" +
-                    "        </div>\n" +
                     "        <div class=\"d-flex align-items-center justify-content-center\">" +
                     "           <div id=\"labels\" class=\"form-group col-md-3\">" +
                     "           </div>\n" +
