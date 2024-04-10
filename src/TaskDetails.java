@@ -6,6 +6,7 @@ import service.*;
 import service.dto.ChatMessageDto;
 import service.dto.SubtaskDto;
 import service.dto.TaskDto;
+import service.dto.TaskFileDto;
 import utils.UiUtils;
 
 import java.io.IOException;
@@ -18,9 +19,11 @@ public class TaskDetails extends HttpServlet {
     private final AuthenticationService authenticationService;
     private final ChatMessageService chatMessageService;
     private final SubtaskService subtaskService;
+    private final TaskFileDao taskFileDao;
 
     public TaskDetails() {
-        this.taskService = new TaskService(new TaskDao(), new SubtaskDao(), new TaskFileDao());
+        this.taskFileDao = new TaskFileDao();
+        this.taskService = new TaskService(new TaskDao(), new SubtaskDao(), taskFileDao);
         this.authenticationService = new AuthenticationService(new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService()));
         this.chatMessageService = new ChatMessageService(new ChatMessageDao());
         this.subtaskService = new SubtaskService(new SubtaskDao());
@@ -50,6 +53,21 @@ public class TaskDetails extends HttpServlet {
                     chatMessages.append("<p>").append(chatMessage.getContent()).append("</p>");
                     chatMessages.append("</div>");
                     chatMessages.append("</div>");
+                }
+            }
+
+            List<TaskFileDto> taskFiles = taskFileDao.findAllForTaskId(Long.parseLong(taskId));
+            StringBuilder files = new StringBuilder();
+            if (taskFiles.isEmpty()) {
+                files.append("<p>No files.</p>");
+            } else {
+                for (TaskFileDto file : taskFiles) {
+                    files.append("<div>");
+                    files.append("<a href=\"/tasks_1-Servlets/download?")
+                            .append("filename=").append(file.getName()).append("&")
+                            .append("filetype=").append(file.getType()).append("\"> ")
+                            .append(file.getName()).append("</a>");
+                    files.append("</div>");
                 }
             }
 
@@ -111,6 +129,7 @@ public class TaskDetails extends HttpServlet {
                     "              <button type=\"submit\" class=\"btn btn-primary\">Send Message</button>\n" +
                     "            </form>" +
                     "        <h1>Files</h1>\n" +
+                    files +
                     "        <h1>Worklogs</h1>\n" +
                     "    </div>\n" +
                     "        <div class=\"form-group row\">\n" +

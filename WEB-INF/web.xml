@@ -80,6 +80,10 @@
         <servlet-name>RemoveSubtaskServlet</servlet-name>
         <servlet-class>RemoveSubtask</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DownloadFileServlet</servlet-name>
+        <servlet-class>DownloadFile</servlet-class>
+    </servlet>
     <!-- SERVLET-DEFINITIONS-END -->
 
 
@@ -159,6 +163,10 @@
     <servlet-mapping>
         <servlet-name>RemoveSubtaskServlet</servlet-name>
         <url-pattern>/removeSubtask</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DownloadFileServlet</servlet-name>
+        <url-pattern>/download</url-pattern>
     </servlet-mapping>
     <!-- SERVLET-MAPPINGS-END -->
 
