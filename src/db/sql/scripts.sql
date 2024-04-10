@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS subtask (
 	CONSTRAINT subtask_pkey PRIMARY KEY (id)
 );
 ALTER TABLE subtask DROP CONSTRAINT IF EXISTS fksvs126nsj9ohhvwjog5ddp76x;
-ALTER TABLE subtask ADD CONSTRAINT fksvs126nsj9ohhvwjog5ddp76x FOREIGN KEY (task_id) REFERENCES (id) ON DELETE CASCADE;
+ALTER TABLE subtask ADD CONSTRAINT fksvs126nsj9ohhvwjog5ddp76x FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE;
 
 CREATE TABLE task_file (
 	"name" varchar(255) NOT NULL,
