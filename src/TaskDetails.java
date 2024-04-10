@@ -23,7 +23,7 @@ public class TaskDetails extends HttpServlet {
 
     public TaskDetails() {
         this.taskFileDao = new TaskFileDao();
-        this.taskService = new TaskService(new TaskDao(), new SubtaskDao(), taskFileDao);
+        this.taskService = new TaskService(new TaskDao(), new SubtaskDao(), taskFileDao, new LabelDao());
         this.authenticationService = new AuthenticationService(new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService()));
         this.chatMessageService = new ChatMessageService(new ChatMessageDao());
         this.subtaskService = new SubtaskService(new SubtaskDao());

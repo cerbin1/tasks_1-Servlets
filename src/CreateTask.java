@@ -30,7 +30,7 @@ public class CreateTask extends HttpServlet {
     private final TaskReminderService taskReminderService;
 
     public CreateTask() {
-        this.taskService = new TaskService(new TaskDao(), new SubtaskDao(), new TaskFileDao());
+        this.taskService = new TaskService(new TaskDao(), new SubtaskDao(), new TaskFileDao(), new LabelDao());
         this.priorityService = new PriorityService(new PriorityDao());
         this.userService = new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService());
         this.authenticationService = new AuthenticationService(userService);
@@ -120,8 +120,24 @@ public class CreateTask extends HttpServlet {
                     "                </select>\n" +
                     "            </div>\n" +
                     "        </div>\n" +
-                    "\n" +
-                    "        <h1>Labels</h1>\n" +
+
+                    "        <h1>Labels</h1>" +
+                    "         </div>\n" +
+                    "        </div>\n" +
+                    "        <div class=\"d-flex align-items-center justify-content-center\">" +
+                    "           <div id=\"labels\" class=\"form-group col-md-3\">" +
+                    "           </div>\n" +
+                    "          </div>\n" +
+                    "<button type=\"button\" class=\"btn btn-success\" onclick=\"(function() { " +
+                    "const labels = document.getElementById('labels');" +
+                    "const input = document.createElement('input');" +
+                    "input.classList.add('form-control');\n" +
+                    "input.style.textAlign = 'center';\n" +
+                    "input.name = 'labels[]';" +
+                    "input.placeholder = 'Label name';" +
+                    "labels.appendChild(input);" +
+                    "})()\">Add label</button>" +
+
                     "        <h1>Category</h1>\n" +
                     "        <div class=\"d-flex align-items-center justify-content-center\">\n" +
                     "          <div class=\"form-group col-md-3\">\n" +
@@ -162,10 +178,11 @@ public class CreateTask extends HttpServlet {
             String creatorId = request.getParameter("user");
             String priorityId = request.getParameter("priority");
             String[] subtasks = request.getParameterValues("subtasks[]");
+            String[] labels = request.getParameterValues("labels[]");
             String category = request.getParameter("category");
             PrintWriter writer = response.getWriter();
             String userId = (String) request.getSession(false).getAttribute("userId");
-            Long taskId = taskService.create(name, deadline, userId, priorityId, creatorId, subtasks, category);
+            Long taskId = taskService.create(name, deadline, userId, priorityId, creatorId, subtasks, category, labels);
             if (taskId == null) {
                 writer.print("<html lang=\"en\">\n" +
                         "<head>\n" +

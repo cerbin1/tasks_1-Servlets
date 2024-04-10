@@ -19,7 +19,7 @@ public class MyTasks extends HttpServlet {
     private final AuthenticationService authenticationService;
 
     public MyTasks() {
-        this.taskService = new TaskService(new TaskDao(), new SubtaskDao(), new TaskFileDao());
+        this.taskService = new TaskService(new TaskDao(), new SubtaskDao(), new TaskFileDao(), new LabelDao());
         this.authenticationService = new AuthenticationService(new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService()));
     }
 

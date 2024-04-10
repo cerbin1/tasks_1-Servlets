@@ -1,5 +1,6 @@
 package service;
 
+import db.dao.LabelDao;
 import db.dao.SubtaskDao;
 import db.dao.TaskDao;
 import db.dao.TaskFileDao;
@@ -13,17 +14,22 @@ public class TaskService {
     private final TaskDao taskDao;
     private final SubtaskDao subtaskDao;
     private final TaskFileDao taskFileDao;
+    private final LabelDao labelDao;
 
-    public TaskService(TaskDao taskDao, SubtaskDao subtaskDao, TaskFileDao taskFileDao) {
+    public TaskService(TaskDao taskDao, SubtaskDao subtaskDao, TaskFileDao taskFileDao, LabelDao labelDao) {
         this.taskDao = taskDao;
         this.subtaskDao = subtaskDao;
         this.taskFileDao = taskFileDao;
+        this.labelDao = labelDao;
     }
 
-    public Long create(String name, String deadline, String userId, String priorityId, String creatorId, String[] subtasks, String category) {
+    public Long create(String name, String deadline, String userId, String priorityId, String creatorId, String[] subtasks, String category, String[] labels) {
         Long taskId = taskDao.createTask(name, LocalDateTime.parse(deadline), Long.parseLong(userId), Long.parseLong(priorityId), Long.parseLong(creatorId), category);
         if (subtasks != null) {
             subtaskDao.createSubtasks(taskId, subtasks);
+        }
+        if (labels != null) {
+            labelDao.createLabels(taskId, labels);
         }
         return taskId;
     }
