@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS notification (
 );
 ALTER TABLE notification DROP CONSTRAINT IF EXISTS fk2ktjq1slw0ldkuy5rx8fbte2p;
 ALTER TABLE notification DROP CONSTRAINT IF EXISTS fk9y21adhxn0ayjhfocscqox7bh;
-ALTER TABLE notification ADD CONSTRAINT fk2ktjq1slw0ldkuy5rx8fbte2p FOREIGN KEY (task_id) REFERENCES task(id);
+ALTER TABLE notification ADD CONSTRAINT fk2ktjq1slw0ldkuy5rx8fbte2p FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE;
 ALTER TABLE notification ADD CONSTRAINT fk9y21adhxn0ayjhfocscqox7bh FOREIGN KEY (user_id) REFERENCES "user"(id);
 
 CREATE TABLE IF NOT EXISTS task_reminder (
@@ -75,8 +75,7 @@ CREATE TABLE IF NOT EXISTS task_reminder (
 	CONSTRAINT uk_r27tf7809aiy305ogagleyl8x UNIQUE (task_id)
 );
 ALTER TABLE task_reminder DROP CONSTRAINT IF EXISTS fkd028lj86vw4icrkf6ss76njp3;
-ALTER TABLE task_reminder ADD CONSTRAINT fkd028lj86vw4icrkf6ss76njp3 FOREIGN KEY (task_id) REFERENCES task(id);
-
+ALTER TABLE task_reminder ADD CONSTRAINT fkd028lj86vw4icrkf6ss76njp3 FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE;
 
 CREATE TABLE IF NOT EXISTS chat_message (
 	id bigserial NOT NULL,
@@ -89,8 +88,8 @@ CREATE TABLE IF NOT EXISTS chat_message (
 );
 ALTER TABLE chat_message DROP CONSTRAINT IF EXISTS fke3tn55xm4h4uog1wgawrx873y;
 ALTER TABLE chat_message DROP CONSTRAINT IF EXISTS fkgiqeap8ays4lf684x7m0r2729;
-ALTER TABLE chat_message ADD CONSTRAINT fke3tn55xm4h4uog1wgawrx873y FOREIGN KEY (task_id) REFERENCES task(id);
 ALTER TABLE chat_message ADD CONSTRAINT fkgiqeap8ays4lf684x7m0r2729 FOREIGN KEY (sender_id) REFERENCES "user"(id);
+ALTER TABLE chat_message ADD CONSTRAINT fke3tn55xm4h4uog1wgawrx873y FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE;
 
 CREATE TABLE IF NOT EXISTS subtask (
 	id bigserial NOT NULL,
@@ -100,7 +99,7 @@ CREATE TABLE IF NOT EXISTS subtask (
 	CONSTRAINT subtask_pkey PRIMARY KEY (id)
 );
 ALTER TABLE subtask DROP CONSTRAINT IF EXISTS fksvs126nsj9ohhvwjog5ddp76x;
-ALTER TABLE subtask ADD CONSTRAINT fksvs126nsj9ohhvwjog5ddp76x FOREIGN KEY (task_id) REFERENCES task(id);
+ALTER TABLE subtask ADD CONSTRAINT fksvs126nsj9ohhvwjog5ddp76x FOREIGN KEY (task_id) REFERENCES (id) ON DELETE CASCADE;
 
 CREATE TABLE task_file (
 	"name" varchar(255) NOT NULL,
@@ -109,4 +108,4 @@ CREATE TABLE task_file (
 	CONSTRAINT task_file_pkey PRIMARY KEY ("name")
 );
 ALTER TABLE task_file DROP CONSTRAINT IF EXISTS fkgr48xj5f1r0t32jwf648vuoay;
-ALTER TABLE task_file ADD CONSTRAINT fkgr48xj5f1r0t32jwf648vuoay FOREIGN KEY (task_id) REFERENCES task(id);
+ALTER TABLE task_file ADD CONSTRAINT fkgr48xj5f1r0t32jwf648vuoay FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE;
