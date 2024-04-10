@@ -61,6 +61,9 @@ public class CreateTask extends HttpServlet {
                         .append(priorityDto.getValue())
                         .append("</option>\n");
             }
+            List<String> categoriesData = taskService.getAllTaskCategories();
+            StringBuilder categories = new StringBuilder();
+            categoriesData.forEach(category -> categories.append("<option value=\"").append(category).append("\">").append(category).append("</option>\n"));
 
             writer.print("<html lang=\"en\">\n" +
                     "<head>\n" +
@@ -119,6 +122,13 @@ public class CreateTask extends HttpServlet {
                     "\n" +
                     "        <h1>Labels</h1>\n" +
                     "        <h1>Category</h1>\n" +
+                    "        <div class=\"d-flex align-items-center justify-content-center\">\n" +
+                    "          <div class=\"form-group col-md-3\">\n" +
+                    "            <select class=\"form-select\" name=\"category\">\n" +
+                    categories +
+                    "            </select>\n" +
+                    "          </div>\n" +
+                    "        </div>" +
                     "        <h1>Subtasks</h1>\n" +
                     "        <div class=\"d-flex align-items-center justify-content-center\">" +
                     "         <div id=\"subtasks\" class=\"form-group col-md-3\">" +
@@ -151,9 +161,10 @@ public class CreateTask extends HttpServlet {
             String creatorId = request.getParameter("user");
             String priorityId = request.getParameter("priority");
             String[] subtasks = request.getParameterValues("subtasks[]");
+            String category = request.getParameter("category");
             PrintWriter writer = response.getWriter();
             String userId = (String) request.getSession(false).getAttribute("userId");
-            Long taskId = taskService.create(name, deadline, userId, priorityId, creatorId, subtasks);
+            Long taskId = taskService.create(name, deadline, userId, priorityId, creatorId, subtasks, category);
             if (taskId == null) {
                 writer.print("<html lang=\"en\">\n" +
                         "<head>\n" +

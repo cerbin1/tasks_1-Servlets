@@ -9,13 +9,15 @@ public class EditTaskDto {
     private final LocalDateTime deadline;
     private final Long assigneeId;
     private final Long priorityId;
+    private final String category;
 
-    public EditTaskDto(Long id, String name, LocalDateTime deadline, Long assigneeId, Long priorityId) {
+    public EditTaskDto(Long id, String name, LocalDateTime deadline, Long assigneeId, Long priorityId, String category) {
         this.id = id;
         this.name = name;
         this.deadline = deadline;
         this.assigneeId = assigneeId;
         this.priorityId = priorityId;
+        this.category = category;
     }
 
     public Long getId() {
@@ -36,5 +38,9 @@ public class EditTaskDto {
 
     public Long getPriorityId() {
         return priorityId;
+    }
+
+    public String getCategory() {
+        return category;
     }
 }

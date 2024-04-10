@@ -39,8 +39,8 @@ CREATE TABLE IF NOT EXISTS task (
 	assignee_id int8 NULL,
 	creator_id int8 NULL,
 	priority_id int8 NULL,
---	category varchar(255) NULL,
---	CONSTRAINT task_category_check CHECK (((category)::text = ANY ((ARRAY['ENGINEERING'::character varying, 'SALES'::character varying, 'DOCUMENTATION'::character varying, 'WEB_DESIGN'::character varying, 'TESTING'::character varying])::text[]))),
+	category varchar(255) NULL,
+	CONSTRAINT task_category_check CHECK (((category)::text = ANY ((ARRAY['ENGINEERING'::character varying, 'SALES'::character varying, 'DOCUMENTATION'::character varying, 'WEB_DESIGN'::character varying, 'TESTING'::character varying])::text[]))),
 	CONSTRAINT task_pkey PRIMARY KEY (id)
 );
 ALTER TABLE task DROP CONSTRAINT IF EXISTS fkekr1dgiqktpyoip3qmp6lxsit;

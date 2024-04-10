@@ -1,5 +1,6 @@
 package service;
 
+import db.TaskCategory;
 import db.dao.SubtaskDao;
 import db.dao.TaskDao;
 import db.dao.TaskFileDao;
@@ -7,7 +8,9 @@ import service.dto.EditTaskDto;
 import service.dto.TaskDto;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaskService {
     private final TaskDao taskDao;
@@ -20,8 +23,8 @@ public class TaskService {
         this.taskFileDao = taskFileDao;
     }
 
-    public Long create(String name, String deadline, String userId, String priorityId, String creatorId, String[] subtasks) {
-        Long taskId = taskDao.createTask(name, LocalDateTime.parse(deadline), Long.parseLong(userId), Long.parseLong(priorityId), Long.parseLong(creatorId));
+    public Long create(String name, String deadline, String userId, String priorityId, String creatorId, String[] subtasks, String category) {
+        Long taskId = taskDao.createTask(name, LocalDateTime.parse(deadline), Long.parseLong(userId), Long.parseLong(priorityId), Long.parseLong(creatorId), category);
         if (subtasks != null) {
             subtaskDao.createSubtasks(taskId, subtasks);
         }
@@ -43,13 +46,15 @@ public class TaskService {
     public boolean updateTaskAndSubtasks(String taskId, String name, String deadline, String userId, String priorityId,
                                          String[] subtasksNames,
                                          String[] subtasksIds,
-                                         String[] newSubtasks) {
+                                         String[] newSubtasks,
+                                         String category) {
         boolean success = taskDao.updateById(
                 Long.parseLong(taskId),
                 name,
                 LocalDateTime.parse(deadline),
                 Long.parseLong(userId),
-                Long.parseLong(priorityId));
+                Long.parseLong(priorityId),
+                category);
         if (subtasksIds != null) {
             subtaskDao.updateSubtasks(subtasksNames, subtasksIds);
         }
@@ -79,5 +84,9 @@ public class TaskService {
         if (!taskFileDao.existsByName(fileName)) {
             taskFileDao.create(fileName, contentType, Long.parseLong(taskId));
         }
+    }
+
+    public List<String> getAllTaskCategories() {
+        return Arrays.stream(TaskCategory.values()).map(TaskCategory::name).collect(Collectors.toList());
     }
 }

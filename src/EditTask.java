@@ -112,6 +112,15 @@ public class EditTask extends HttpServlet {
                 files.append("</div>").append("</div>");
             }
 
+            List<String> categoriesData = taskService.getAllTaskCategories();
+            StringBuilder categories = new StringBuilder();
+            categoriesData.forEach(category ->
+                    categories.append("<option value=\"").append(category).append("\"")
+                            .append(task.getCategory().equals(category) ? " selected" : "")
+                            .append(">")
+                            .append(category)
+                            .append("</option>\n"));
+
 
             writer.print("<html lang=\"en\">\n" +
                     "<head>\n" +
@@ -174,6 +183,13 @@ public class EditTask extends HttpServlet {
                     "\n" +
                     "        <h1>Labels</h1>\n" +
                     "        <h1>Category</h1>\n" +
+                    "        <div class=\"d-flex align-items-center justify-content-center\">\n" +
+                    "          <div class=\"form-group col-md-3\">\n" +
+                    "            <select class=\"form-select\" name=\"category\">\n" +
+                    categories +
+                    "            </select>\n" +
+                    "          </div>\n" +
+                    "        </div>" +
                     "        <h1>Subtasks</h1>\n" +
                     subtasks +
                     "        <button id=\"addSubtask\" type=\"button\" class=\"btn btn-success\">Add subtask</button>" +
@@ -208,8 +224,9 @@ public class EditTask extends HttpServlet {
             String[] subtasksNames = request.getParameterValues("subtasksNames[]");
             String[] subtasksIds = request.getParameterValues("subtasksIds[]");
             String[] newSubtasks = request.getParameterValues("newSubtasks[]");
+            String category = request.getParameter("category");
             PrintWriter writer = response.getWriter();
-            if (taskService.updateTaskAndSubtasks(taskId, name, deadline, userId, priorityId, subtasksNames, subtasksIds, newSubtasks)) {
+            if (taskService.updateTaskAndSubtasks(taskId, name, deadline, userId, priorityId, subtasksNames, subtasksIds, newSubtasks, category)) {
                 uploadNewFiles(request, taskId);
                 response.sendRedirect(APP_BASE_PATH + "/tasks");
             } else {

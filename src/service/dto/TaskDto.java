@@ -11,8 +11,9 @@ public class TaskDto {
     private final String priority;
     private final boolean completed;
     private final LocalDateTime completeDate;
+    private final String category;
 
-    public TaskDto(Long id, String name, LocalDateTime deadline, String assignee, String priority, boolean completed, LocalDateTime completeDate) {
+    public TaskDto(Long id, String name, LocalDateTime deadline, String assignee, String priority, boolean completed, LocalDateTime completeDate, String category) {
         this.id = id;
         this.name = name;
         this.deadline = deadline;
@@ -20,6 +21,7 @@ public class TaskDto {
         this.priority = priority;
         this.completed = completed;
         this.completeDate = completeDate;
+        this.category = category;
     }
 
     public long getId() {
@@ -48,5 +50,9 @@ public class TaskDto {
 
     public String getAssignee() {
         return assignee;
+    }
+
+    public String getCategory() {
+        return category;
     }
 }

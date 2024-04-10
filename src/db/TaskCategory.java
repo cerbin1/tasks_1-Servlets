@@ -1,0 +1,5 @@
+package db;
+
+public enum TaskCategory {
+    NO_CATEGORY, ENGINEERING, SALES, DOCUMENTATION, WEB_DESIGN, TESTING
+}

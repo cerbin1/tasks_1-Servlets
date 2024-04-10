@@ -13,14 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskDao {
-    private static final String SQL_CREATE_TASK = "INSERT INTO task (\"name\", deadline, assignee_id, priority_id, creator_id) VALUES (?, ?, ?, ?, ?) RETURNING id";
-    private static final String SQL_GET_ALL_TASKS = "SELECT task.id, task.name, task.deadline, task.completed, task.complete_date," +
+    private static final String SQL_CREATE_TASK = "INSERT INTO task (\"name\", deadline, assignee_id, priority_id, creator_id, category) VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
+    private static final String SQL_GET_ALL_TASKS = "SELECT task.id, task.category, task.name, task.deadline, task.completed, task.complete_date," +
             " \"user\".name as assigneeName, priority.value as priorityValue " +
             "FROM task " +
             "JOIN priority ON task.priority_id = priority.id " +
             "JOIN \"user\" ON task.assignee_id = \"user\".id " +
             "ORDER BY task.id";
-    private static final String SQL_GET_USERNAME_TASKS = "SELECT task.id, task.name, task.deadline, task.completed, task.complete_date," +
+    private static final String SQL_GET_USERNAME_TASKS = "SELECT task.id, task.category, task.name, task.deadline, task.completed, task.complete_date," +
             " \"user\".name as assigneeName, priority.value as priorityValue " +
             "FROM task " +
             "JOIN priority ON task.priority_id = priority.id " +
@@ -28,29 +28,29 @@ public class TaskDao {
             "WHERE \"user\".username = ? " +
             "ORDER BY task.id";
 
-    private static final String SQL_GET_TASK_FOR_EDIT_BY_ID = "SELECT task.id, task.name, task.deadline, task.completed, task.complete_date," +
+    private static final String SQL_GET_TASK_FOR_EDIT_BY_ID = "SELECT task.id, task.category, task.name, task.deadline, task.completed, task.complete_date," +
             "task.assignee_id, task.priority_id " +
             "FROM task " +
             "WHERE task.id = ?";
 
-    private static final String SQL_GET_TASK_BY_ID = "SELECT task.id, task.name, task.deadline, task.completed, task.complete_date," +
+    private static final String SQL_GET_TASK_BY_ID = "SELECT task.id, task.category, task.name, task.deadline, task.completed, task.complete_date," +
             " \"user\".name as assigneeName, priority.value as priorityValue " +
             "FROM task " +
             "JOIN priority ON task.priority_id = priority.id " +
             "JOIN \"user\" ON task.assignee_id = \"user\".id " +
             "WHERE task.id = ?";
 
-    private static final String SQL_UPDATE_TASK = "UPDATE task SET name = ?, deadline = ?, assignee_id = ?, priority_id = ? WHERE id = ?";
+    private static final String SQL_UPDATE_TASK = "UPDATE task SET name = ?, deadline = ?, assignee_id = ?, priority_id = ?, category = ? WHERE id = ?";
 
     private static final String SQL_DELETE_TASK_BY_ID = "DELETE FROM task WHERE id = ?";
-    private static final String SQL_GET_TASKS_BY_NAME = "SELECT task.id, task.name, task.deadline, task.completed, task.complete_date," +
+    private static final String SQL_GET_TASKS_BY_NAME = "SELECT task.id, task.category, task.name, task.deadline, task.completed, task.complete_date," +
             " \"user\".name as assigneeName, priority.value as priorityValue " +
             "FROM task " +
             "JOIN priority ON task.priority_id = priority.id " +
             "JOIN \"user\" ON task.assignee_id = \"user\".id " +
             "WHERE task.\"name\" LIKE '%' || ? || '%' ORDER BY id";
 
-    public Long createTask(String name, LocalDateTime deadline, Long userId, Long priorityId, Long creatorId) {
+    public Long createTask(String name, LocalDateTime deadline, Long userId, Long priorityId, Long creatorId, String category) {
         DbConnection dbConnection = new DbConnection();
         Connection connection = dbConnection.createConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_CREATE_TASK)) {
@@ -59,6 +59,7 @@ public class TaskDao {
             preparedStatement.setLong(3, userId);
             preparedStatement.setLong(4, priorityId);
             preparedStatement.setLong(5, creatorId);
+            preparedStatement.setString(6, category);
 
             if (preparedStatement.execute() && preparedStatement.getResultSet().next()) {
                 connection.close();
@@ -85,7 +86,8 @@ public class TaskDao {
                             resultSet.getString("assigneeName"),
                             resultSet.getString("priorityValue"),
                             resultSet.getBoolean("completed"),
-                            resultSet.getObject("complete_date", LocalDateTime.class)
+                            resultSet.getObject("complete_date", LocalDateTime.class),
+                            resultSet.getString("category")
                     ));
                 }
                 return tasks;
@@ -111,7 +113,8 @@ public class TaskDao {
                             resultSet.getString("assigneeName"),
                             resultSet.getString("priorityValue"),
                             resultSet.getBoolean("completed"),
-                            resultSet.getObject("complete_date", LocalDateTime.class)
+                            resultSet.getObject("complete_date", LocalDateTime.class),
+                            resultSet.getString("category")
                     ));
                 }
                 return tasks;
@@ -134,7 +137,8 @@ public class TaskDao {
                         resultSet.getString("name"),
                         resultSet.getObject("deadline", LocalDateTime.class),
                         resultSet.getLong("assignee_id"),
-                        resultSet.getLong("priority_id"));
+                        resultSet.getLong("priority_id"),
+                        resultSet.getString("category"));
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -143,7 +147,7 @@ public class TaskDao {
         }
     }
 
-    public boolean updateById(Long taskId, String name, LocalDateTime deadline, Long assigneeId, Long priorityId) {
+    public boolean updateById(Long taskId, String name, LocalDateTime deadline, Long assigneeId, Long priorityId, String category) {
         DbConnection dbConnection = new DbConnection();
         Connection connection = dbConnection.createConnection();
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_UPDATE_TASK)) {
@@ -151,7 +155,8 @@ public class TaskDao {
             preparedStatement.setObject(2, deadline);
             preparedStatement.setLong(3, assigneeId);
             preparedStatement.setLong(4, priorityId);
-            preparedStatement.setLong(5, taskId);
+            preparedStatement.setString(5, category);
+            preparedStatement.setLong(6, taskId);
             boolean taskUpdated = preparedStatement.executeUpdate() == 1;
             if (!taskUpdated) {
                 throw new SQLException();
@@ -176,7 +181,9 @@ public class TaskDao {
                         resultSet.getString("assigneeName"),
                         resultSet.getString("priorityValue"),
                         resultSet.getBoolean("completed"),
-                        resultSet.getObject("complete_date", LocalDateTime.class));
+                        resultSet.getObject("complete_date", LocalDateTime.class),
+                        resultSet.getString("category")
+                );
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -215,7 +222,8 @@ public class TaskDao {
                             resultSet.getString("assigneeName"),
                             resultSet.getString("priorityValue"),
                             resultSet.getBoolean("completed"),
-                            resultSet.getObject("complete_date", LocalDateTime.class)
+                            resultSet.getObject("complete_date", LocalDateTime.class),
+                            resultSet.getString("category")
                     ));
                 }
                 return tasks;
