@@ -13,6 +13,7 @@ import java.util.List;
 public class TaskFileDao {
     private static final String SQL_SAVE_FILE_INFO = "INSERT INTO task_file (name, type, task_id) VALUES (?, ?, ?)";
     private static final String SQL_GET_TASK_FILES = "SELECT name, type, task_id FROM task_file WHERE task_id = ?";
+    private static final String SQL_GET_TASK_FILE_BY_FILENAME = "SELECT name FROM task_file WHERE name = ?";
 
     public void create(String fileName, String contentType, Long taskId) {
         DbConnection dbConnection = new DbConnection();
@@ -48,5 +49,25 @@ public class TaskFileDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean existsByName(String fileName) {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_TASK_FILE_BY_FILENAME)) {
+                preparedStatement.setString(1, fileName);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                return onlyOneRowIn(resultSet);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private boolean onlyOneRowIn(ResultSet resultSet) throws SQLException {
+        return resultSet.next() && !resultSet.next();
+
     }
 }

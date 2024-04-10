@@ -1,19 +1,22 @@
 import db.dao.*;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 import service.*;
-import service.dto.EditTaskDto;
-import service.dto.PriorityDto;
-import service.dto.SubtaskDto;
-import service.dto.UserDto;
+import service.dto.*;
 import utils.UiUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static conf.ApplicationProperties.APP_BASE_PATH;
+import static conf.ApplicationProperties.FILE_UPLOADS_BASE_URL;
 
 public class EditTask extends HttpServlet {
     private final UserService userService;
@@ -21,9 +24,11 @@ public class EditTask extends HttpServlet {
     private final AuthenticationService authenticationService;
     private final TaskService taskService;
     private final SubtaskService subtaskService;
+    private final TaskFileDao taskFileDao;
 
     public EditTask() {
-        this.taskService = new TaskService(new TaskDao(), new SubtaskDao(), new TaskFileDao());
+        this.taskFileDao = new TaskFileDao();
+        this.taskService = new TaskService(new TaskDao(), new SubtaskDao(), taskFileDao);
         this.priorityService = new PriorityService(new PriorityDao());
         this.userService = new UserService(new UserDao(), new UserActivationLinkDao(), new EmailSendingService());
         this.authenticationService = new AuthenticationService(userService);
@@ -79,6 +84,22 @@ public class EditTask extends HttpServlet {
                         .append("\" type=\"submit\" class=\"btn btn-danger col-md-3\">Remove</a>")
                         .append("</div>");
             }
+
+            List<TaskFileDto> taskFiles = taskFileDao.findAllForTaskId(Long.parseLong(taskId));
+            StringBuilder files = new StringBuilder();
+            if (taskFiles.isEmpty()) {
+                files.append("<p>No files.</p>");
+            } else {
+                for (TaskFileDto file : taskFiles) {
+                    files.append("<div>");
+                    files.append("<a href=\"/tasks_1-Servlets/download?")
+                            .append("filename=").append(file.getName()).append("&")
+                            .append("filetype=").append(file.getType()).append("\"> ")
+                            .append(file.getName()).append("</a>");
+                    files.append("</div>");
+                }
+            }
+
             subtasks.append("</div>").append("</div>");
 
             writer.print("<html lang=\"en\">\n" +
@@ -105,7 +126,7 @@ public class EditTask extends HttpServlet {
                     "<body>\n" +
                     UiUtils.navbarHtml() +
                     "<div class='container'>\n" +
-                    "    <form action=\"/tasks_1-Servlets/editTask?taskId=" + taskId + "\" method=\"post\">\n" +
+                    "    <form action=\"/tasks_1-Servlets/editTask?taskId=" + taskId + "\" enctype=\"multipart/form-data\" method=\"post\">\n" +
                     "        <div class=\"form-group row\">\n" +
                     "            <label for=\"name\" class=\"col-sm-2 col-form-label\">Name</label>\n" +
                     "            <div class=\"col-sm-10\">\n" +
@@ -146,6 +167,9 @@ public class EditTask extends HttpServlet {
                     subtasks +
                     "        <button id=\"addSubtask\" type=\"button\" class=\"btn btn-success\">Add subtask</button>" +
                     "        <h1>Files upload</h1>\n" +
+                    files +
+                    "        <input type=\"file\" multiple name=\"files\"/>" +
+
                     "\n" +
                     "        <div class=\"form-group row\">\n" +
                     "            <div class='form-control'>\n" +
@@ -163,7 +187,7 @@ public class EditTask extends HttpServlet {
     }
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         if (authenticationService.authenticate(request)) {
             String taskId = request.getParameter("taskId");
             String name = request.getParameter("name");
@@ -175,6 +199,7 @@ public class EditTask extends HttpServlet {
             String[] newSubtasks = request.getParameterValues("newSubtasks[]");
             PrintWriter writer = response.getWriter();
             if (taskService.updateTaskAndSubtasks(taskId, name, deadline, userId, priorityId, subtasksNames, subtasksIds, newSubtasks)) {
+                uploadNewFiles(request, taskId);
                 response.sendRedirect(APP_BASE_PATH + "/tasks");
             } else {
                 writer.print("<html lang=\"en\">\n" +
@@ -194,6 +219,19 @@ public class EditTask extends HttpServlet {
             }
         } else {
             response.sendRedirect("authError.html");
+        }
+    }
+
+    private void uploadNewFiles(HttpServletRequest request, String taskId) throws IOException, ServletException {
+        Collection<Part> parts = request
+                .getParts().stream()
+                .filter(part -> part.getName().equals("files") && !part.getSubmittedFileName().isBlank())
+                .collect(Collectors.toList());
+        for (Part file : parts) {
+            String fileName = file.getSubmittedFileName();
+            String realPath = getServletContext().getRealPath(FILE_UPLOADS_BASE_URL);
+            taskService.saveOrUpdateTaskFileInfo(fileName, file.getContentType(), taskId);
+            file.write(realPath + File.separator + fileName);
         }
     }
 

@@ -74,4 +74,10 @@ public class TaskService {
     public void saveTaskFileInfo(String fileName, String contentType, Long taskId) {
         taskFileDao.create(fileName, contentType, taskId);
     }
+
+    public void saveOrUpdateTaskFileInfo(String fileName, String contentType, String taskId) {
+        if (!taskFileDao.existsByName(fileName)) {
+            taskFileDao.create(fileName, contentType, Long.parseLong(taskId));
+        }
+    }
 }
