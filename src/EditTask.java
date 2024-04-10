@@ -84,23 +84,34 @@ public class EditTask extends HttpServlet {
                         .append("\" type=\"submit\" class=\"btn btn-danger col-md-3\">Remove</a>")
                         .append("</div>");
             }
+            subtasks.append("</div>").append("</div>");
 
             List<TaskFileDto> taskFiles = taskFileDao.findAllForTaskId(Long.parseLong(taskId));
             StringBuilder files = new StringBuilder();
+
+            subtasks.append("<div class=\"d-flex\">")
+                    .append("<div class=\"form-group col-md-6\">");
+
             if (taskFiles.isEmpty()) {
                 files.append("<p>No files.</p>");
             } else {
                 for (TaskFileDto file : taskFiles) {
-                    files.append("<div>");
-                    files.append("<a href=\"/tasks_1-Servlets/download?")
+                    files.append("<div class=\"input-group\">")
+                            .append("<a class=\"col-md-9\" href=\"/tasks_1-Servlets/download?")
                             .append("filename=").append(file.getName()).append("&")
                             .append("filetype=").append(file.getType()).append("\"> ")
-                            .append(file.getName()).append("</a>");
-                    files.append("</div>");
+                            .append(file.getName()).append("</a>")
+
+
+                            .append("<a href=\"/tasks_1-Servlets/removeFile?")
+                            .append("filename=").append(file.getName())
+                            .append("&taskId=").append(file.getTaskId()).append("\"")
+                            .append(" type=\"submit\" class=\"btn btn-danger col-md-3\">Remove</a>")
+                            .append("</div>");
                 }
+                files.append("</div>").append("</div>");
             }
 
-            subtasks.append("</div>").append("</div>");
 
             writer.print("<html lang=\"en\">\n" +
                     "<head>\n" +

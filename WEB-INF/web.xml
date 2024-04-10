@@ -89,6 +89,10 @@
         <servlet-name>DownloadFileServlet</servlet-name>
         <servlet-class>DownloadFile</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RemoveFileServlet</servlet-name>
+        <servlet-class>RemoveFile</servlet-class>
+    </servlet>
     <!-- SERVLET-DEFINITIONS-END -->
 
 
@@ -172,6 +176,10 @@
     <servlet-mapping>
         <servlet-name>DownloadFileServlet</servlet-name>
         <url-pattern>/download</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveFileServlet</servlet-name>
+        <url-pattern>/removeFile</url-pattern>
     </servlet-mapping>
     <!-- SERVLET-MAPPINGS-END -->
 

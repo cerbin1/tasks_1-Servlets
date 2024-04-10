@@ -70,4 +70,19 @@ public class TaskFileDao {
         return resultSet.next() && !resultSet.next();
 
     }
+
+    public boolean removeTaskFileByName(String filename) {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM task_file WHERE name = ?")) {
+                preparedStatement.setString(1, filename);
+                preparedStatement.executeUpdate();
+                return true;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
