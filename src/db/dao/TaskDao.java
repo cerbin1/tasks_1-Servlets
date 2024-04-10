@@ -55,6 +55,12 @@ public class TaskDao {
             "JOIN priority ON task.priority_id = priority.id " +
             "JOIN \"user\" ON task.assignee_id = \"user\".id " +
             "WHERE task.category LIKE '%' || ? || '%' ORDER BY id";
+    private static final String SQL_GET_TASKS_BY_LABEL = "SELECT task.id, task.category, task.name, task.deadline, task.completed, task.complete_date," +
+            " \"user\".name as assigneeName, priority.value as priorityValue " +
+            "FROM task " +
+            "JOIN priority ON task.priority_id = priority.id " +
+            "JOIN \"user\" ON task.assignee_id = \"user\".id " +
+            "WHERE task.id IN (SELECT task_label.task_id FROM task_label WHERE task_label.name = ?) ORDER BY id";
 
     public Long createTask(String name, LocalDateTime deadline, Long userId, Long priorityId, Long creatorId, String category) {
         DbConnection dbConnection = new DbConnection();
@@ -246,6 +252,31 @@ public class TaskDao {
         try (Connection connection = dbConnection.createConnection()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_TASKS_BY_CATEGORY)) {
                 preparedStatement.setString(1, category);
+                ResultSet resultSet = preparedStatement.executeQuery();
+                List<TaskDto> tasks = new ArrayList<>();
+                while (resultSet.next()) {
+                    tasks.add(new TaskDto(resultSet.getLong("id"),
+                            resultSet.getString("name"),
+                            resultSet.getObject("deadline", LocalDateTime.class),
+                            resultSet.getString("assigneeName"),
+                            resultSet.getString("priorityValue"),
+                            resultSet.getBoolean("completed"),
+                            resultSet.getObject("complete_date", LocalDateTime.class),
+                            resultSet.getString("category")
+                    ));
+                }
+                return tasks;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<TaskDto> findAllByLabel(String label) {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_TASKS_BY_LABEL)) {
+                preparedStatement.setString(1, label);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 List<TaskDto> tasks = new ArrayList<>();
                 while (resultSet.next()) {

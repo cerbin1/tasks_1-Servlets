@@ -62,6 +62,10 @@
         <servlet-class>SearchByName</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>SearchByLabelServlet</servlet-name>
+        <servlet-class>SearchByLabel</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>SearchByCategoryServlet</servlet-name>
         <servlet-class>SearchByCategory</servlet-class>
     </servlet>
@@ -152,6 +156,10 @@
     <servlet-mapping>
         <servlet-name>SearchByNameServlet</servlet-name>
         <url-pattern>/searchByName</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchByLabelServlet</servlet-name>
+        <url-pattern>/searchByLabel</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>SearchByCategoryServlet</servlet-name>

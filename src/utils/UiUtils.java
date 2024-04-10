@@ -107,7 +107,14 @@ public interface UiUtils {
                         "</select>\n" +
                         "<button type=\"submit\" class=\"btn btn-primary\">Search by category</button>" +
                         "</form>" +
-                        "</div>\n";
+                        "</div>\n" +
+
+                        "<div class=\"form-group row\">\n" +
+                        "<form action=\"/tasks_1-Servlets/searchByLabel\" method=\"get\">\n" +
+                        "<input type=\"text\" class=\"form-control\" name=\"label\" />\n" +
+                        "<button type=\"submit\" class=\"btn btn-primary\">Search by label</button>\n" +
+                        "</form>" +
+                        "</div>";
     }
 
     static String notificationListToHtmlTable(List<NotificationDto> notificationsData) {
