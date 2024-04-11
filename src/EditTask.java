@@ -168,8 +168,8 @@ public class EditTask extends HttpServlet {
                 }
                 worklogs.append("</tbody>");
                 worklogs.append("</table>");
-                worklogs.append("</div>");
             }
+            worklogs.append("</div>");
             worklogs.append("<button type=\"button\" class=\"btn btn-primary\" onclick=\"(function() { ")
                     .append("const div = document.getElementById('worklogs');")
                     .append("div.style.display = 'block';")

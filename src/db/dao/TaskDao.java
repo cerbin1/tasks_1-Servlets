@@ -15,7 +15,8 @@ import java.util.List;
 public class TaskDao {
     private static final String SQL_CREATE_TASK = "INSERT INTO task (\"name\", deadline, assignee_id, priority_id, creator_id, category) VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
     private static final String SQL_GET_ALL_TASKS = "SELECT task.id, task.category, task.name, task.deadline, task.completed, task.complete_date," +
-            " \"user\".name as assigneeName, priority.value as priorityValue " +
+            " \"user\".name as assigneeName, priority.value as priorityValue, " +
+            "(SELECT COUNT(*) FROM subtask WHERE subtask.task_id = task.id) as subtasksCount, (SELECT COUNT(*) FROM worklog WHERE worklog.task_id = task.id) as worklogsCount " +
             "FROM task " +
             "JOIN priority ON task.priority_id = priority.id " +
             "JOIN \"user\" ON task.assignee_id = \"user\".id " +
@@ -44,19 +45,22 @@ public class TaskDao {
 
     private static final String SQL_DELETE_TASK_BY_ID = "DELETE FROM task WHERE id = ?";
     private static final String SQL_GET_TASKS_BY_NAME = "SELECT task.id, task.category, task.name, task.deadline, task.completed, task.complete_date," +
-            " \"user\".name as assigneeName, priority.value as priorityValue " +
+            " \"user\".name as assigneeName, priority.value as priorityValue, " +
+            "(SELECT COUNT(*) FROM subtask WHERE subtask.task_id = task.id) as subtasksCount, (SELECT COUNT(*) FROM worklog WHERE worklog.task_id = task.id) as worklogsCount " +
             "FROM task " +
             "JOIN priority ON task.priority_id = priority.id " +
             "JOIN \"user\" ON task.assignee_id = \"user\".id " +
             "WHERE task.\"name\" LIKE '%' || ? || '%' ORDER BY id";
     private static final String SQL_GET_TASKS_BY_CATEGORY = "SELECT task.id, task.category, task.name, task.deadline, task.completed, task.complete_date," +
-            " \"user\".name as assigneeName, priority.value as priorityValue " +
+            " \"user\".name as assigneeName, priority.value as priorityValue, " +
+            "(SELECT COUNT(*) FROM subtask WHERE subtask.task_id = task.id) as subtasksCount, (SELECT COUNT(*) FROM worklog WHERE worklog.task_id = task.id) as worklogsCount " +
             "FROM task " +
             "JOIN priority ON task.priority_id = priority.id " +
             "JOIN \"user\" ON task.assignee_id = \"user\".id " +
             "WHERE task.category LIKE '%' || ? || '%' ORDER BY id";
     private static final String SQL_GET_TASKS_BY_LABEL = "SELECT task.id, task.category, task.name, task.deadline, task.completed, task.complete_date," +
-            " \"user\".name as assigneeName, priority.value as priorityValue " +
+            " \"user\".name as assigneeName, priority.value as priorityValue, " +
+            "(SELECT COUNT(*) FROM subtask WHERE subtask.task_id = task.id) as subtasksCount, (SELECT COUNT(*) FROM worklog WHERE worklog.task_id = task.id) as worklogsCount " +
             "FROM task " +
             "JOIN priority ON task.priority_id = priority.id " +
             "JOIN \"user\" ON task.assignee_id = \"user\".id " +
@@ -98,6 +102,8 @@ public class TaskDao {
                             resultSet.getObject("deadline", LocalDateTime.class),
                             resultSet.getString("assigneeName"),
                             resultSet.getString("priorityValue"),
+                            resultSet.getLong("subtasksCount"),
+                            resultSet.getLong("worklogsCount"),
                             resultSet.getBoolean("completed"),
                             resultSet.getObject("complete_date", LocalDateTime.class),
                             resultSet.getString("category")
@@ -234,6 +240,8 @@ public class TaskDao {
                             resultSet.getObject("deadline", LocalDateTime.class),
                             resultSet.getString("assigneeName"),
                             resultSet.getString("priorityValue"),
+                            resultSet.getLong("subtasksCount"),
+                            resultSet.getLong("worklogsCount"),
                             resultSet.getBoolean("completed"),
                             resultSet.getObject("complete_date", LocalDateTime.class),
                             resultSet.getString("category")
@@ -261,6 +269,8 @@ public class TaskDao {
                             resultSet.getObject("deadline", LocalDateTime.class),
                             resultSet.getString("assigneeName"),
                             resultSet.getString("priorityValue"),
+                            resultSet.getLong("subtasksCount"),
+                            resultSet.getLong("worklogsCount"),
                             resultSet.getBoolean("completed"),
                             resultSet.getObject("complete_date", LocalDateTime.class),
                             resultSet.getString("category")
@@ -286,6 +296,8 @@ public class TaskDao {
                             resultSet.getObject("deadline", LocalDateTime.class),
                             resultSet.getString("assigneeName"),
                             resultSet.getString("priorityValue"),
+                            resultSet.getLong("subtasksCount"),
+                            resultSet.getLong("worklogsCount"),
                             resultSet.getBoolean("completed"),
                             resultSet.getObject("complete_date", LocalDateTime.class),
                             resultSet.getString("category")

@@ -60,6 +60,8 @@ public interface UiUtils {
                         .append("<td>").append(task.getDeadline().toString()).append("</td>")
                         .append("<td>").append(task.getAssignee()).append("</td>")
                         .append("<td>").append(task.getPriority()).append("</td>")
+                        .append("<td>").append(task.getSubtasksCount()).append("</td>")
+                        .append("<td>").append(task.getWorklogsCount()).append("</td>")
                         .append("<td>").append(task.isCompleted() ? "Yes" : "No").append("</td>")
                         .append("<td>").append(task.getCompleteDate() == null ? "-" : task.getCompleteDate().toString()).append("</td>")
                         .append("<td>").append("<a href=\"editTask?taskId=").append(task.getId()).append("\">Edit</a>").append("</td>")
@@ -80,6 +82,8 @@ public interface UiUtils {
                         "<th scope=\"col\">Deadline</th>" +
                         "<th scope=\"col\">Assignee</th>" +
                         "<th scope=\"col\">Priority</th>" +
+                        "<th scope=\"col\">Subtasks Count</th>" +
+                        "<th scope=\"col\">Worklogs Count</th>" +
                         "<th scope=\"col\">Is Completed</th>" +
                         "<th scope=\"col\">Complete date</th>" +
                         "<th scope=\"col\">Edit</th>" +
