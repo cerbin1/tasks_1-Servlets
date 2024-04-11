@@ -117,4 +117,4 @@ CREATE TABLE IF NOT EXISTS task_label (
 	CONSTRAINT task_label_pkey PRIMARY KEY (id)
 );
 ALTER TABLE task_label DROP CONSTRAINT IF EXISTS fktmt7qqcx2mbu4jhmxu9g53o9j;
-ALTER TABLE task_label ADD CONSTRAINT fktmt7qqcx2mbu4jhmxu9g53o9j FOREIGN KEY (task_id) REFERENCES task(id);
+ALTER TABLE task_label ADD CONSTRAINT fktmt7qqcx2mbu4jhmxu9g53o9j FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE;;
