@@ -15,6 +15,7 @@ import java.util.List;
 public class WorklogDao {
     private static final String SQL_GET_TASK_WORKLOGS = "SELECT id, date, minutes, comment FROM worklog WHERE task_id = ?";
     private static final String SQL_CREATE_WORKLOG = "INSERT INTO worklog (date, minutes, comment, modification_date, creator_id, task_id) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String SQL_DELETE_WORKLOG = "DELETE FROM worklog WHERE id = ?";
 
     public void createWorklog(LocalDate date, Long minutes, String comment, Long creatorId, Long taskId) {
         DbConnection dbConnection = new DbConnection();
@@ -49,6 +50,20 @@ public class WorklogDao {
                             resultSet.getString("comment")));
                 }
                 return worklogs;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void removeWorklog(Long worklogId) {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_DELETE_WORKLOG)) {
+                preparedStatement.setLong(1, worklogId);
+                preparedStatement.executeUpdate();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

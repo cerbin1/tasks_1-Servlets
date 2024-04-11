@@ -132,7 +132,12 @@ public class TaskDetails extends HttpServlet {
                             .append("  <td>").append(worklog.getComment()).append("</td>")
 //                            .append("   <td><button type=\"button\" class=\"btn btn-primary\" onClick={handleEditWorklogButton(setLog, worklog, openModal)")
 //                            .append("  }>Edit</button></td>")
-//                            .append("   <td><button type=\"button\" class=\"btn btn-danger\" onClick={() => handleDeleteWorklogButton(worklog.id)}>Delete</button></td>")
+                            .append("<td>")
+                            .append("   <form action=\"/tasks_1-Servlets/removeWorklog?")
+                            .append("worklogId=").append(worklog.getId()).append("&taskId=").append(taskId)
+                            .append("   \" method=\"post\">")
+                            .append("       <button type=\"submit\" class=\"btn btn-danger\">Delete</button></td>")
+                            .append("   </form>")
                             .append("</tr>");
                 }
                 worklogs.append("</tbody>");
