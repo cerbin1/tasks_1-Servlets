@@ -18,6 +18,7 @@ public class TaskDetails extends HttpServlet {
     private final SubtaskService subtaskService;
     private final TaskFileDao taskFileDao;
     private final LabelService labelService;
+    private final WorklogService worklogService;
 
     public TaskDetails() {
         this.taskFileDao = new TaskFileDao();
@@ -26,6 +27,7 @@ public class TaskDetails extends HttpServlet {
         this.chatMessageService = new ChatMessageService(new ChatMessageDao());
         this.subtaskService = new SubtaskService(new SubtaskDao());
         this.labelService = new LabelService(new LabelDao());
+        this.worklogService = new WorklogService(new WorklogDao());
     }
 
     @Override
@@ -104,6 +106,40 @@ public class TaskDetails extends HttpServlet {
                 }
             }
 
+            List<WorklogDto> worklogData = worklogService.getTaskWorklogs(taskId);
+            StringBuilder worklogs = new StringBuilder();
+            worklogs.append("<div class=\"list-group\">");
+            if (worklogData.isEmpty()) {
+                worklogs.append("<b>No data.</b>");
+            } else {
+                worklogs
+                        .append("            <table class=\"table\">")
+                        .append("              <thead>")
+                        .append("                <tr>")
+                        .append("                  <th scope=\"col\">Date</th>")
+                        .append("                  <th scope=\"col\">Minutes</th>")
+                        .append("                  <th scope=\"col\">Comment</th>")
+                        .append("                  <th scope=\"col\">Edit</th>")
+                        .append("                  <th scope=\"col\">Delete</th>")
+                        .append("                </tr>")
+                        .append("              </thead>")
+                        .append("              <tbody>");
+                for (WorklogDto worklog : worklogData) {
+                    worklogs
+                            .append("<tr>")
+                            .append("  <td>").append(worklog.getDate().toString()).append("</td>")
+                            .append("  <td>").append(worklog.getMinutes()).append("</td>")
+                            .append("  <td>").append(worklog.getComment()).append("</td>")
+//                            .append("   <td><button type=\"button\" class=\"btn btn-primary\" onClick={handleEditWorklogButton(setLog, worklog, openModal)")
+//                            .append("  }>Edit</button></td>")
+//                            .append("   <td><button type=\"button\" class=\"btn btn-danger\" onClick={() => handleDeleteWorklogButton(worklog.id)}>Delete</button></td>")
+                            .append("</tr>");
+                }
+                worklogs.append("</tbody>");
+                worklogs.append("</table>");
+                worklogs.append("</div>");
+            }
+
             writer.print("<html lang=\"en\">\n" +
                     "<head>\n" +
                     "    <title></title>\n" +
@@ -151,12 +187,38 @@ public class TaskDetails extends HttpServlet {
                     "        <h1>Files</h1>\n" +
                     files +
                     "        <h1>Worklogs</h1>\n" +
-                    "    </div>\n" +
+                    worklogs +
                     "        <div class=\"form-group row\">\n" +
                     "            <div class='form-control'>\n" +
                     "                <a href=\"/tasks_1-Servlets/myTasks\" class=\"btn btn-secondary\">Back</a>\n" +
+                    "                <button class=\"btn btn-primary\" data-bs-toggle=\"modal\" data-bs-target=\"#logTimeModal\" ref={openModal}>\n" +
+                    "                   Log time\n" +
+                    "                 </button>\n" +
                     "            </div>\n" +
                     "        </div>\n" +
+
+                    "        <div class=\"modal fade\" id=\"logTimeModal\" tabIndex=\"-1\" aria-labelledby=\"#logTimeModalLabel\" >\n" +
+                    "          <div class=\"modal-dialog\">\n" +
+                    "            <div class=\"modal-content\">\n" +
+                    "              <div class=\"modal-header\">\n" +
+                    "                <h5 class=\"modal-title\" id=\"logTimeModalLabel\">Worklog</h5>\n" +
+                    "                <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\" aria-label=\"Close\" ref={closeModal}></button>\n" +
+                    "              </div>\n" +
+                    "              <div class=\"modal-body\">\n" +
+                    "                <form action=\"/tasks_1-Servlets/createWorklog?creatorId=" + userId + "&taskId=" + taskId + "\" method=\"post\">\n" +
+                    "                  <input type=\"date\" class=\"form-control\" id=\"date\" name=\"date\" />\n" +
+                    "                  <input type=\"number\" class=\"form-control\" name=\"minutes\" placeholder=\"Minutes worked\" min=\"1\" max=\"1000\" />\n" +
+                    "                  <input type=\"text\" class=\"form-control\" name=\"comment\" placeholder='Comment' />\n" +
+                    "                  <div class=\"modal-footer\">\n" +
+                    "                    <button type=\"button\" class=\"btn btn-secondary\" data-bs-dismiss=\"modal\"\n" +
+                    "                    >Close</button>\n" +
+                    "                    <button type=\"submit\" class=\"btn btn-primary\">Log Time</button>\n" +
+                    "                  </div>\n" +
+                    "                </form>\n" +
+                    "              </div>\n" +
+                    "            </div>\n" +
+                    "          </div>\n" +
+                    "        </div>" +
                     "</div>" +
                     "</body>\n" +
                     "</html>");

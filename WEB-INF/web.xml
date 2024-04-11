@@ -105,6 +105,10 @@
         <servlet-name>RemoveFileServlet</servlet-name>
         <servlet-class>RemoveFile</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CreateWorklogServlet</servlet-name>
+        <servlet-class>CreateWorklog</servlet-class>
+    </servlet>
     <!-- SERVLET-DEFINITIONS-END -->
 
 
@@ -204,6 +208,10 @@
     <servlet-mapping>
         <servlet-name>RemoveFileServlet</servlet-name>
         <url-pattern>/removeFile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateWorklogServlet</servlet-name>
+        <url-pattern>/createWorklog</url-pattern>
     </servlet-mapping>
     <!-- SERVLET-MAPPINGS-END -->
 

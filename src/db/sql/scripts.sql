@@ -118,3 +118,19 @@ CREATE TABLE IF NOT EXISTS task_label (
 );
 ALTER TABLE task_label DROP CONSTRAINT IF EXISTS fktmt7qqcx2mbu4jhmxu9g53o9j;
 ALTER TABLE task_label ADD CONSTRAINT fktmt7qqcx2mbu4jhmxu9g53o9j FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE;;
+
+
+CREATE TABLE IF NOT EXISTS worklog (
+	id bigserial NOT NULL,
+	"comment" varchar(255) NULL,
+	"date" date NOT NULL,
+	minutes int8 NOT NULL,
+	modification_date timestamp(6) NULL,
+	creator_id int8 NOT NULL,
+	task_id int8 NOT NULL,
+	CONSTRAINT worklog_pkey PRIMARY KEY (id)
+);
+ALTER TABLE worklog DROP CONSTRAINT IF EXISTS fk77s4aq6w3ahlikk23a3ap6bqd;
+ALTER TABLE worklog DROP CONSTRAINT IF EXISTS fk9pl2igi680xj7r1mltji1vncn;
+ALTER TABLE worklog ADD CONSTRAINT fk77s4aq6w3ahlikk23a3ap6bqd FOREIGN KEY (task_id) REFERENCES task(id) ON DELETE CASCADE;;
+ALTER TABLE worklog ADD CONSTRAINT fk9pl2igi680xj7r1mltji1vncn FOREIGN KEY (creator_id) REFERENCES "user"(id);

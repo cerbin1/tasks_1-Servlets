@@ -27,6 +27,7 @@ public class EditTask extends HttpServlet {
     private final SubtaskService subtaskService;
     private final TaskFileDao taskFileDao;
     private final LabelService labelService;
+    private final WorklogService worklogService;
 
     public EditTask() {
         this.taskFileDao = new TaskFileDao();
@@ -36,6 +37,7 @@ public class EditTask extends HttpServlet {
         this.authenticationService = new AuthenticationService(userService);
         this.subtaskService = new SubtaskService(new SubtaskDao());
         this.labelService = new LabelService(new LabelDao());
+        this.worklogService = new WorklogService(new WorklogDao());
     }
 
     @Override
@@ -140,6 +142,40 @@ public class EditTask extends HttpServlet {
                             .append("</option>\n"));
 
 
+            List<WorklogDto> worklogData = worklogService.getTaskWorklogs(taskId);
+            StringBuilder worklogs = new StringBuilder();
+            worklogs.append("<div class=\"list-group\" id=\"worklogs\" style=\"display: none\">");
+            if (worklogData.isEmpty()) {
+                worklogs.append("<b>No data.</b>");
+            } else {
+                worklogs
+                        .append("            <table class=\"table\">")
+                        .append("              <thead>")
+                        .append("                <tr>")
+                        .append("                  <th scope=\"col\">Date</th>")
+                        .append("                  <th scope=\"col\">Minutes</th>")
+                        .append("                  <th scope=\"col\">Comment</th>")
+                        .append("                </tr>")
+                        .append("              </thead>")
+                        .append("              <tbody>");
+                for (WorklogDto worklog : worklogData) {
+                    worklogs
+                            .append("<tr>")
+                            .append("  <td>").append(worklog.getDate().toString()).append("</td>")
+                            .append("  <td>").append(worklog.getMinutes()).append("</td>")
+                            .append("  <td>").append(worklog.getComment()).append("</td>")
+                            .append("</tr>");
+                }
+                worklogs.append("</tbody>");
+                worklogs.append("</table>");
+                worklogs.append("</div>");
+            }
+            worklogs.append("<button type=\"button\" class=\"btn btn-primary\" onclick=\"(function() { ")
+                    .append("const div = document.getElementById('worklogs');")
+                    .append("div.style.display = 'block';")
+                    .append("})()\">Show worklogs</button>");
+
+
             writer.print("<html lang=\"en\">\n" +
                     "<head>\n" +
                     "    <title>Create task</title>\n" +
@@ -226,6 +262,8 @@ public class EditTask extends HttpServlet {
                     files +
                     "        <input type=\"file\" multiple name=\"files\"/>" +
 
+                    "<h1>Worklogs</h1>" +
+                    worklogs +
                     "\n" +
                     "        <div class=\"form-group row\">\n" +
                     "            <div class='form-control'>\n" +
