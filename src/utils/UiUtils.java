@@ -104,8 +104,6 @@ public interface UiUtils {
 
                         "<div class=\"form-group row\">\n" +
                         "<form action=\"/tasks_1-Servlets/searchByCategory\" method=\"get\">\n" +
-                        "<div class=\"d-flex align-items-center justify-content-center\">\n" +
-                        "<div class=\"form-group col-md-3\">\n" +
                         "<select class=\"form-select\" name=\"category\">\n" +
                         categories +
                         "</select>\n" +
