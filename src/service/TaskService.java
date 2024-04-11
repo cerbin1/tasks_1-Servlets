@@ -96,4 +96,8 @@ public class TaskService {
     public List<TaskDto> getTasksByLabel(String label) {
         return taskDao.findAllByLabel(label);
     }
+
+    public void completeTask(String taskId) {
+        taskDao.markAsCompleted(Long.parseLong(taskId));
+    }
 }

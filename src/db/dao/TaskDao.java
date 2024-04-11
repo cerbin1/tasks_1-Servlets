@@ -61,6 +61,7 @@ public class TaskDao {
             "JOIN priority ON task.priority_id = priority.id " +
             "JOIN \"user\" ON task.assignee_id = \"user\".id " +
             "WHERE task.id IN (SELECT task_label.task_id FROM task_label WHERE task_label.name = ?) ORDER BY id";
+    private static final String SQL_MARK_TASK_AS_COMPLETED = "UPDATE task SET completed = true, complete_date = NOW() WHERE id = ?";
 
     public Long createTask(String name, LocalDateTime deadline, Long userId, Long priorityId, Long creatorId, String category) {
         DbConnection dbConnection = new DbConnection();
@@ -292,6 +293,21 @@ public class TaskDao {
                 }
                 return tasks;
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void markAsCompleted(Long taskId) {
+        DbConnection dbConnection = new DbConnection();
+        Connection connection = dbConnection.createConnection();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_MARK_TASK_AS_COMPLETED)) {
+            preparedStatement.setLong(1, taskId);
+            boolean taskUpdated = preparedStatement.executeUpdate() == 1;
+            if (!taskUpdated) {
+                throw new SQLException();
+            }
+            connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -200,12 +200,16 @@ public class TaskDetails extends HttpServlet {
                     files +
                     "        <h1>Worklogs</h1>\n" +
                     worklogs +
+
                     "        <div class=\"form-group row\">\n" +
                     "            <div class='form-control'>\n" +
                     "                <a href=\"/tasks_1-Servlets/myTasks\" class=\"btn btn-secondary\">Back</a>\n" +
                     "                <button class=\"btn btn-primary\" data-bs-toggle=\"modal\" data-bs-target=\"#logTimeModal\" ref={openModal}>\n" +
                     "                   Log time\n" +
                     "                 </button>\n" +
+                    "<form action=\"/tasks_1-Servlets/markAsCompleted?taskId=" + taskId + "\" method=\"post\" style=\"display: inline\" >" +
+                    "   <button type=\"submit\" class=\"btn btn-success\">Mark as completed</button>" +
+                    "</form>" +
                     "            </div>\n" +
                     "        </div>\n" +
 
