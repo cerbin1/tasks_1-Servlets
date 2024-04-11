@@ -126,12 +126,19 @@ public class TaskDetails extends HttpServlet {
                         .append("              <tbody>");
                 for (WorklogDto worklog : worklogData) {
                     worklogs
+
                             .append("<tr>")
-                            .append("  <td>").append(worklog.getDate().toString()).append("</td>")
-                            .append("  <td>").append(worklog.getMinutes()).append("</td>")
-                            .append("  <td>").append(worklog.getComment()).append("</td>")
-//                            .append("   <td><button type=\"button\" class=\"btn btn-primary\" onClick={handleEditWorklogButton(setLog, worklog, openModal)")
-//                            .append("  }>Edit</button></td>")
+                            .append("<form action=\"/tasks_1-Servlets/updateWorklog?")
+                            .append("worklogId=").append(worklog.getId()).append("&taskId=").append(taskId)
+                            .append("   \" method=\"post\">")
+                            .append("  <td><input type=\"date\" class=\"form-control\" name=\"date\" value=\"").append(worklog.getDate().toString()).append("\" /></td>")
+                            .append("  <td><input type=\"number\" class=\"form-control\" name=\"minutes\" min=\"1\" max=\"1000\"")
+                            .append("value=\"").append(worklog.getMinutes()).append("\" /></td>")
+                            .append("  <td><input class=\"form-control\" name=\"comment\" ")
+                            .append("value=\"").append(worklog.getComment()).append("\" /></td>")
+                            .append("<td>")
+                            .append("       <button type=\"submit\" class=\"btn btn-primary\">Update</button></td>")
+                            .append("</form>")
                             .append("<td>")
                             .append("   <form action=\"/tasks_1-Servlets/removeWorklog?")
                             .append("worklogId=").append(worklog.getId()).append("&taskId=").append(taskId)

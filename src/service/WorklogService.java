@@ -18,10 +18,14 @@ public class WorklogService {
     }
 
     public void createWorklog(String date, String minutes, String comment, String creatorId, String taskId) {
-        worklogDao.createWorklog(LocalDate.parse(date), Long.parseLong(minutes), comment,Long.parseLong(creatorId),Long.parseLong(taskId) );
+        worklogDao.createWorklog(LocalDate.parse(date), Long.parseLong(minutes), comment, Long.parseLong(creatorId), Long.parseLong(taskId));
     }
 
     public void removeWorklog(String worklogId) {
         worklogDao.removeWorklog(Long.parseLong(worklogId));
+    }
+
+    public void updateWorklog(String worklogId, String date, String minutes, String comment) {
+        worklogDao.updateById(Long.parseLong(worklogId), LocalDate.parse(date), Long.parseLong(minutes), comment);
     }
 }

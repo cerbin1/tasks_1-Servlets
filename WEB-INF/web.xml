@@ -113,6 +113,10 @@
         <servlet-name>RemoveWorklogServlet</servlet-name>
         <servlet-class>RemoveWorklog</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UpdateWorklogServlet</servlet-name>
+        <servlet-class>UpdateWorklog</servlet-class>
+    </servlet>
     <!-- SERVLET-DEFINITIONS-END -->
 
 
@@ -220,6 +224,10 @@
     <servlet-mapping>
         <servlet-name>RemoveWorklogServlet</servlet-name>
         <url-pattern>/removeWorklog</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateWorklogServlet</servlet-name>
+        <url-pattern>/updateWorklog</url-pattern>
     </servlet-mapping>
     <!-- SERVLET-MAPPINGS-END -->
 
