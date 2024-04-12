@@ -27,6 +27,7 @@ public class UserDao {
     final String SQL_GET_ALL_USERS = "SELECT id, name, username FROM \"user\"";
     final String SQL_GET_ALL_USERS_FOR_ADMIN_PANEL = "SELECT id, email, username, name, surname, active, (SELECT COUNT(*) FROM chat_message WHERE chat_message.sender_id = \"user\".id) AS messagesCount FROM \"user\"";
     final String SQL_REMOVE_USER = "DELETE FROM \"user\" WHERE id = ?";
+    final String SQL_GET_NUMBER_OF_USERS = "SELECT COUNT(*) FROM \"user\"";
 
 
     public void createUser(String email, String username, String hashedPassword, String name, String surname) {
@@ -219,6 +220,21 @@ public class UserDao {
             try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_REMOVE_USER)) {
                 preparedStatement.setLong(1, userId);
                 return preparedStatement.executeUpdate() == 1;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Long getNumberOfUsers() {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_NUMBER_OF_USERS)) {
+                ResultSet resultSet = preparedStatement.executeQuery();
+                resultSet.next();
+                return resultSet.getLong(1);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }

@@ -66,6 +66,8 @@ public class TaskDao {
             "JOIN \"user\" ON task.assignee_id = \"user\".id " +
             "WHERE task.id IN (SELECT task_label.task_id FROM task_label WHERE task_label.name = ?) ORDER BY id";
     private static final String SQL_MARK_TASK_AS_COMPLETED = "UPDATE task SET completed = true, complete_date = NOW() WHERE id = ?";
+    private static final String SQL_GET_NUMBER_OF_CREATED_TASKS = "SELECT COUNT(*) FROM task";
+    private static final String SQL_GET_NUMBER_OF_COMPLETED_TASKS = "SELECT COUNT(*) FROM task WHERE completed = true";
 
     public Long createTask(String name, LocalDateTime deadline, Long userId, Long priorityId, Long creatorId, String category) {
         DbConnection dbConnection = new DbConnection();
@@ -320,6 +322,36 @@ public class TaskDao {
                 throw new SQLException();
             }
             connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Long getNumberOfCreatedTasks() {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_NUMBER_OF_CREATED_TASKS)) {
+                ResultSet resultSet = preparedStatement.executeQuery();
+                resultSet.next();
+                return resultSet.getLong(1);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Long getNumberOfCompletedTasks() {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_NUMBER_OF_COMPLETED_TASKS)) {
+                ResultSet resultSet = preparedStatement.executeQuery();
+                resultSet.next();
+                return resultSet.getLong(1);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

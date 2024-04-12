@@ -121,6 +121,10 @@
         <servlet-name>CompleteTaskServlet</servlet-name>
         <servlet-class>CompleteTask</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>StatsServlet</servlet-name>
+        <servlet-class>Stats</servlet-class>
+    </servlet>
     <!-- SERVLET-DEFINITIONS-END -->
 
 
@@ -236,6 +240,10 @@
     <servlet-mapping>
         <servlet-name>CompleteTaskServlet</servlet-name>
         <url-pattern>/markAsCompleted</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StatsServlet</servlet-name>
+        <url-pattern>/stats</url-pattern>
     </servlet-mapping>
     <!-- SERVLET-MAPPINGS-END -->
 

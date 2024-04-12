@@ -15,6 +15,7 @@ public class SubtaskDao {
     private static final String SQL_GET_ALL_SUBTASKS_BY_TASK_ID = "SELECT id, name, sequence FROM subtask WHERE task_id = ? ORDER BY sequence";
     private static final String SQL_DELETE_SUBTASK = "DELETE FROM subtask WHERE id = ?";
     private static final String SQL_UPDATE_SUBTASK = "UPDATE subtask SET name = ? WHERE id = ?";
+    private static final String SQL_GET_NUMBER_OF_SUBTASKS = "SELECT COUNT(*) FROM subtask";
 
     public void createSubtasks(Long taskId, String[] subtaskNames) {
         for (int i = 0; i < subtaskNames.length; i++) {
@@ -78,6 +79,21 @@ public class SubtaskDao {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    public Long getNumberOfSubtasks() {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_NUMBER_OF_SUBTASKS)) {
+                ResultSet resultSet = preparedStatement.executeQuery();
+                resultSet.next();
+                return resultSet.getLong(1);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

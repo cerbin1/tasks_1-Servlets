@@ -37,7 +37,7 @@ public interface UiUtils {
                 "                <a class=\"nav-link\" href=\"/tasks_1-Servlets/adminPanel\">User List</a>\n" +
                 "            </li>\n" +
                 "            <li class=\"nav-item\">\n" +
-                "                <a class=\"nav-link\" href=\"\">Stats</a>\n" +
+                "                <a class=\"nav-link\" href=\"/tasks_1-Servlets/stats\">Stats</a>\n" +
                 "            </li>\n" +
                 "            <li class=\"nav-item\">\n" +
                 "                <a class=\" btn btn-warning\" href=\"/tasks_1-Servlets/logout\">Logout</a>\n" +

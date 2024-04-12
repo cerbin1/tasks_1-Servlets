@@ -21,6 +21,7 @@ public class NotificationDao {
             "JOIN \"user\" ON notification.user_id = \"user\".id " +
             "ORDER BY notification.id";
     public static final String SQL_MARK_AS_READ = "UPDATE notification SET read = true, read_date = ? WHERE id = ?";
+    public static final String SQL_GET_NUMBER_OF_NOTIFICATIONS = "SELECT COUNT(*) FROM notification";
 
     public void create(String name, Long taskId, Long userId) {
         DbConnection dbConnection = new DbConnection();
@@ -86,6 +87,21 @@ public class NotificationDao {
                 preparedStatement.setObject(1, LocalDateTime.now());
                 preparedStatement.setLong(2, notificationId);
                 return preparedStatement.executeUpdate() == 1;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Long getNumberOfNotifications() {
+        DbConnection dbConnection = new DbConnection();
+        try (Connection connection = dbConnection.createConnection()) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_NUMBER_OF_NOTIFICATIONS)) {
+                ResultSet resultSet = preparedStatement.executeQuery();
+                resultSet.next();
+                return resultSet.getLong(1);
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
