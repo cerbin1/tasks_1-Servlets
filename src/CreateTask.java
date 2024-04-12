@@ -1,5 +1,6 @@
 import db.TaskCategory;
 import db.dao.*;
+import integration.GoogleCalendarIntegration;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,11 +9,13 @@ import jakarta.servlet.http.Part;
 import service.*;
 import service.dto.PriorityDto;
 import service.dto.UserDto;
+import utils.DateUtils;
 import utils.UiUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -200,10 +203,26 @@ public class CreateTask extends HttpServlet {
                 notificationService.createNotification("New Task", taskId, creatorId);
                 taskReminderService.createTaskReminder(taskId, LocalDateTime.parse(deadline).minusHours(1));
                 uploadFiles(request, taskId);
+                createGoogleCalendarEvent(name, subtasks, LocalDateTime.parse(deadline));
                 response.sendRedirect(APP_BASE_PATH + "/tasks");
             }
         } else {
             response.sendRedirect("authError.html");
+        }
+    }
+
+    private void createGoogleCalendarEvent(String taskName, String[] subtasks, LocalDateTime deadline) {
+        GoogleCalendarIntegration googleCalendarIntegration = new GoogleCalendarIntegration();
+        try {
+            StringBuilder result = new StringBuilder();
+            if (subtasks != null) {
+                for (String s : subtasks) {
+                    result.append("<li>").append(s).append("</li>");
+                }
+            }
+            googleCalendarIntegration.createGoogleCalendarEvent(taskName, result.toString(), DateUtils.localDateTimeToDate(deadline));
+        } catch (IOException | GeneralSecurityException e) {
+            throw new RuntimeException(e);
         }
     }
 

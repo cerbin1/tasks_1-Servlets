@@ -31,3 +31,6 @@ out
 /sources.txt
 /WEB-INF/uploads/*
 !/WEB-INF/uploads/.gitkeep
+
+# google integration credentials
+credentials.json
