@@ -16,18 +16,18 @@ import static java.sql.ResultSet.TYPE_SCROLL_INSENSITIVE;
 
 public class UserDao {
     private static final String SQL_CREATE_USER = "INSERT INTO \"user\" (email, username, password, name, surname) VALUES (?, ?, ?, ?, ?)";
-    final String SQL_SELECT_USERS = "SELECT id FROM \"user\" WHERE username = ? AND password = ?";
-    final String SQL_SELECT_USER_LOGINS = "SELECT * FROM user_login WHERE username = ? AND session_id = ? AND active = TRUE";
-    final String SQL_CREATE_LOGIN = "INSERT INTO user_login (username, session_id) VALUES (?, ?)";
-    final String SQL_DEACTIVATE_LOGIN = "UPDATE user_login SET active = FALSE WHERE username = ?";
-    final String SQL_ACTIVATE_USER = "UPDATE \"user\" SET active = TRUE WHERE username = ?";
-    final String SQL_IS_USER_ACTIVE = "SELECT * FROM \"user\" WHERE username = ? AND active = TRUE";
-    final String SQL_GET_BY_EMAIL = "SELECT * FROM \"user\" WHERE email = ?";
-    final String SQL_GET_BY_USERNAME = "SELECT * FROM \"user\" WHERE username = ?";
-    final String SQL_GET_ALL_USERS = "SELECT id, name, surname, username FROM \"user\"";
-    final String SQL_GET_ALL_USERS_FOR_ADMIN_PANEL = "SELECT id, email, username, name, surname, active, (SELECT COUNT(*) FROM chat_message WHERE chat_message.sender_id = \"user\".id) AS messagesCount FROM \"user\"";
-    final String SQL_REMOVE_USER = "DELETE FROM \"user\" WHERE id = ?";
-    final String SQL_GET_NUMBER_OF_USERS = "SELECT COUNT(*) FROM \"user\"";
+    private static final String SQL_SELECT_USERS = "SELECT id FROM \"user\" WHERE username = ? AND password = ?";
+    private static final String SQL_SELECT_USER_LOGINS = "SELECT * FROM user_login WHERE username = ? AND session_id = ? AND active = TRUE";
+    private static final String SQL_CREATE_LOGIN = "INSERT INTO user_login (username, session_id) VALUES (?, ?)";
+    private static final String SQL_DEACTIVATE_LOGIN = "UPDATE user_login SET active = FALSE WHERE username = ?";
+    private static final String SQL_ACTIVATE_USER = "UPDATE \"user\" SET active = TRUE WHERE username = ?";
+    private static final String SQL_IS_USER_ACTIVE = "SELECT * FROM \"user\" WHERE username = ? AND active = TRUE";
+    private static final String SQL_GET_BY_EMAIL = "SELECT * FROM \"user\" WHERE email = ?";
+    private static final String SQL_GET_BY_USERNAME = "SELECT * FROM \"user\" WHERE username = ?";
+    private static final String SQL_GET_ALL_USERS = "SELECT id, name, surname, username FROM \"user\"";
+    private static final String SQL_GET_ALL_USERS_FOR_ADMIN_PANEL = "SELECT id, email, username, name, surname, active, (SELECT COUNT(*) FROM chat_message WHERE chat_message.sender_id = \"user\".id) AS messagesCount FROM \"user\"";
+    private static final String SQL_REMOVE_USER = "DELETE FROM \"user\" WHERE id = ?";
+    private static final String SQL_GET_NUMBER_OF_USERS = "SELECT COUNT(*) FROM \"user\"";
 
 
     public void createUser(String email, String username, String hashedPassword, String name, String surname) {
