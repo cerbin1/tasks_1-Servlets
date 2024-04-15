@@ -28,7 +28,7 @@ public class MyTasks extends HttpServlet {
         if (authenticationService.authenticate(request)) {
             PrintWriter writer = response.getWriter();
 
-            List<TaskDto> tasksData = taskService.getTasksForUser((String) request.getSession(false).getAttribute("username"));
+            List<TaskDto> tasksData = taskService.getUserTasks((String) request.getSession(false).getAttribute("userId"));
             StringBuilder taskList = new StringBuilder();
             if (tasksData.isEmpty()) {
                 taskList.append("<tr><td><span>No results</span></td></tr>");

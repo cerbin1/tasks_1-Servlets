@@ -1,15 +1,12 @@
 package service;
 
-import db.dao.NotificationDao;
-import db.dao.SubtaskDao;
-import db.dao.TaskDao;
-import db.dao.UserDao;
-import service.dto.StatisticDto;
-import service.dto.TasksCountForDateDto;
+import db.dao.*;
+import service.dto.*;
 
 import java.time.LocalDate;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Map.Entry.comparingByKey;
 import static java.util.stream.Collectors.*;
@@ -20,12 +17,14 @@ public class StatisticService {
     private final TaskDao taskDao;
     private final SubtaskDao subtaskDao;
     private final NotificationDao notificationDao;
+    private final WorklogDao worklogDao;
 
-    public StatisticService(UserDao userDao, TaskDao taskDao, SubtaskDao subtaskDao, NotificationDao notificationDao) {
+    public StatisticService(UserDao userDao, TaskDao taskDao, SubtaskDao subtaskDao, NotificationDao notificationDao, WorklogDao worklogDao) {
         this.userDao = userDao;
         this.taskDao = taskDao;
         this.subtaskDao = subtaskDao;
         this.notificationDao = notificationDao;
+        this.worklogDao = worklogDao;
     }
 
     public StatisticDto getGeneralStatistics() {
@@ -60,5 +59,22 @@ public class StatisticService {
         sortedByDate.forEach((date, count) -> result.add(new TasksCountForDateDto(date, count)));
 
         return result;
+    }
+
+    public List<TimeLoggedDto> getTimeLoggedByUsers() {
+        List<UserDto> users = userDao.findAll();
+        List<TimeLoggedDto> timeLoggedByUsersList = new ArrayList<>();
+        users.forEach(user -> {
+            List<TaskDto> userTasks = taskDao.findAllByAssigneeId(user.getId());
+            AtomicReference<Long> sum = new AtomicReference<>(0L);
+            userTasks.forEach(userTask -> {
+                List<WorklogDto> taskWorklogs = worklogDao.findAllByTaskId(userTask.getId());
+                taskWorklogs.forEach(worklog -> {
+                    sum.updateAndGet(v -> v + worklog.getMinutes());
+                });
+            });
+            timeLoggedByUsersList.add(new TimeLoggedDto(user.getUsername(), sum.get()));
+        });
+        return timeLoggedByUsersList;
     }
 }

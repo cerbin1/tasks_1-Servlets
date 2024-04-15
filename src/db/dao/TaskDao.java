@@ -26,7 +26,7 @@ public class TaskDao {
             "FROM task " +
             "JOIN priority ON task.priority_id = priority.id " +
             "JOIN \"user\" ON task.assignee_id = \"user\".id " +
-            "WHERE \"user\".username = ? " +
+            "WHERE \"user\".id = ? " +
             "ORDER BY task.id";
 
     private static final String SQL_GET_TASK_FOR_EDIT_BY_ID = "SELECT task.id, task.category, task.name, task.deadline, task.completed, task.complete_date," +
@@ -120,11 +120,11 @@ public class TaskDao {
         }
     }
 
-    public List<TaskDto> findAllByAssigneeUsername(String username) {
+    public List<TaskDto> findAllByAssigneeId(Long assigneeId) {
         DbConnection dbConnection = new DbConnection();
         try (Connection connection = dbConnection.createConnection()) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(SQL_GET_USERNAME_TASKS)) {
-                preparedStatement.setString(1, username);
+                preparedStatement.setLong(1, assigneeId);
                 ResultSet resultSet = preparedStatement.executeQuery();
                 List<TaskDto> tasks = new ArrayList<>();
                 while (resultSet.next()) {

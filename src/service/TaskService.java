@@ -38,8 +38,8 @@ public class TaskService {
         return taskDao.findAll();
     }
 
-    public List<TaskDto> getTasksForUser(String username) {
-        return taskDao.findAllByAssigneeUsername(username);
+    public List<TaskDto> getUserTasks(String userId) {
+        return taskDao.findAllByAssigneeId(Long.parseLong(userId));
     }
 
     public EditTaskDto getTaskForEdit(String taskId) {

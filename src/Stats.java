@@ -8,6 +8,7 @@ import service.StatisticService;
 import service.UserService;
 import service.dto.StatisticDto;
 import service.dto.TasksCountForDateDto;
+import service.dto.TimeLoggedDto;
 import utils.UiUtils;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ public class Stats extends HttpServlet {
     public Stats() {
         UserDao userDao = new UserDao();
         this.authenticationService = new AuthenticationService(new UserService(userDao, new UserActivationLinkDao(), new EmailSendingService()));
-        this.statisticService = new StatisticService(userDao, new TaskDao(), new SubtaskDao(), new NotificationDao());
+        this.statisticService = new StatisticService(userDao, new TaskDao(), new SubtaskDao(), new NotificationDao(), new WorklogDao());
     }
 
     @Override
@@ -38,6 +39,10 @@ public class Stats extends HttpServlet {
             numberOfTasks.forEach(tasksCountForDateDto -> dateValues.append("\"").append(tasksCountForDateDto.getDate().toString()).append("\","));
             dateValues.append("]");
             String taskCounts = Arrays.toString(numberOfTasks.stream().map(TasksCountForDateDto::getCount).toArray());
+
+            List<TimeLoggedDto> timeLoggedByUsers = statisticService.getTimeLoggedByUsers();
+            String usernames = Arrays.toString(timeLoggedByUsers.stream().map(timeLoggedDto -> "\"" + timeLoggedDto.getName() + "\"").toArray());
+            String timeLoggedCounts = Arrays.toString(timeLoggedByUsers.stream().map(TimeLoggedDto::getMinutesLogged).toArray());
             writer.print("<html lang=\"en\">" +
                     "<head>" +
                     "    <title></title>" +
@@ -48,11 +53,11 @@ public class Stats extends HttpServlet {
                     "</head>" +
                     "<script>" +
                     "window.onload = (event) => {" +
-                    "    const ctx = document.getElementById('numberOfTasksChart');" +
+                    "    const contextForChart1 = document.getElementById('numberOfTasksChart');" +
                     "    if (window.numberOfTasksChart && typeof window.numberOfTasksChart.destroy === 'function') {" +
                     "      window.numberOfTasksChart.destroy();" +
                     "    }" +
-                    "    window.numberOfTasksChart = new Chart(ctx, {" +
+                    "    window.numberOfTasksChart = new Chart(contextForChart1, {" +
                     "      type: 'bar'," +
                     "      data: {" +
                     "        labels: " + dateValues + "," +
@@ -66,6 +71,27 @@ public class Stats extends HttpServlet {
                     "        scales: {" +
                     "        x: {type: 'time', time: {tooltipFormat: 'yyyy-MM-dd', unit: 'day',}, title: {display: true, text: 'Date'}}," +
                     "          y: {beginAtZero: true, title: {display: true, text: 'Count'}}" +
+                    "        }" +
+                    "      }" +
+                    "    });" +
+                    "    const contextForChart2 = document.getElementById('minutesLoggedByUsersChart');" +
+                    "    if (window.minutesLoggedByUsersChart && typeof window.minutesLoggedByUsersChart.destroy === 'function') {" +
+                    "      window.minutesLoggedByUsersChart.destroy();" +
+                    "    }" +
+                    "    window.minutesLoggedByUsersChart = new Chart(contextForChart2, {" +
+                    "      type: 'bar'," +
+                    "      data: {" +
+                    "        labels: " + usernames + "," +
+                    "        datasets: [{" +
+                    "          label: '# of minutes'," +
+                    "          data: " + timeLoggedCounts + "," +
+                    "          borderWidth: 1" +
+                    "        }]" +
+                    "      }," +
+                    "      options: {" +
+                    "        scales: {" +
+                    "        x: {title: {display: true, text: 'Username'}}," +
+                    "        y: {beginAtZero: true, title: {display: true, text: 'Minutes logged'}}" +
                     "        }" +
                     "      }" +
                     "    });" +
@@ -106,6 +132,8 @@ public class Stats extends HttpServlet {
                     "      </div>" +
                     "    <h2>Number of tasks per day by deadline</h2>" +
                     "    <canvas id=\"numberOfTasksChart\"></canvas>" +
+                    "    <h2>Number of minutes logged by user</h2>" +
+                    "    <canvas id=\"minutesLoggedByUsersChart\"></canvas>" +
                     "</body>" +
                     "</html>");
         } else {
