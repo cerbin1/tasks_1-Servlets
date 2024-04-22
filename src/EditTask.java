@@ -109,7 +109,7 @@ public class EditTask extends HttpServlet {
             List<TaskFileDto> taskFiles = taskFileDao.findAllForTaskId(Long.parseLong(taskId));
             StringBuilder files = new StringBuilder();
 
-            subtasks.append("<div class=\"d-flex\">")
+            files.append("<div class=\"d-flex\">")
                     .append("<div class=\"form-group col-md-6\">");
 
             if (taskFiles.isEmpty()) {
